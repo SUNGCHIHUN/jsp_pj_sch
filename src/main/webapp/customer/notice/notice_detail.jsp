@@ -47,7 +47,7 @@
 					</tr>
 					
 					<tr>
-						<td colspan="3"><a href="notice_list.jsp">목록</a></td>
+						<td colspan="3" style="text-align:left; padding-left:40px;"><a href="notice_list.jsp">목록</a></td>
 					</tr>
 				</table>
 				

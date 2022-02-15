@@ -43,6 +43,15 @@
 							<td><input type="text" class="inputBox" name="name" placeholder="이름"></td>
 						</tr>
 						<tr>
+							<th>주소</th>
+							<td>
+								<input type="number" id="zipcode" class="inputZipcode" name="zipcode" min=0 max=99999 value="63309" disabled>
+								&nbsp; <input type="button" value="우편번호" onclick="setAddress();"><br>
+								<input type="text" id="address1" class="inputBox" name="address1" value="제주특별자치도 제주시 아라동 첨단로 242" disabled><br>
+								<input type="text" id="address2" class="inputBox" name="address2" value="스페이스닷원">
+							</td>
+						</tr>
+						<tr>
 							<th> 생년월일 </th>
 							<td><input type="date" class="inputBox" name="birthday"></td>
 						</tr>

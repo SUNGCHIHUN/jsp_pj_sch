@@ -10,6 +10,8 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import pj.mvc.jsp.dto.CustomerDTO;
+
 public class CustomerDAOImpl implements CustomerDAO {
 	// 커넥션 풀
 	DataSource dataSource = null;
@@ -72,6 +74,41 @@ public class CustomerDAOImpl implements CustomerDAO {
 		}
 
 		return dupChk;
+	}
+
+	@Override
+	public int insertCustomer(CustomerDTO dto) {
+		// 회원가입 결과 [ 성공:1 실패:0 ]
+		int registerResult = 0;
+		try {
+			conn = dataSource.getConnection();
+			String sql = "INSERT INTO customer(customer_id, customer_password, customer_name, customer_email, customer_tel, zipcode, customer_address)" + 
+						 " VALUES(customers_seq.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, sysdate)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getCustomer_id());
+			pstmt.setString(2, dto.getCustomer_password());
+			pstmt.setString(3, dto.getCustomer_name());
+			pstmt.setString(4, dto.getCustomer_email());
+			pstmt.setString(5, dto.getCustomer_tel());
+			pstmt.setString(6, dto.getZipcode());
+			pstmt.setString(7, dto.getCustomer_address());
+			
+			// DB에 회원정보 등록 및 결과행 개수 반환
+			registerResult = pstmt.executeUpdate();
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		System.out.println("registerResult : " + registerResult);
+		return registerResult;
 	}
 
 }

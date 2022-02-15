@@ -12,7 +12,8 @@
 	<div id="container">
 		<div id="section">
 			<div class="banner">
-				<img src="<%=request.getContextPath() %>/resources/images/mainImage/banner2.png" alt="배너 이미지">
+				<a href="<%=request.getContextPath() %>/manager/stock/stock_list.jsp"><h3>관리자 페이지</h3></a>
+				<a href="<%=request.getContextPath() %>/customer/product/product_list.jsp"><img src="<%=request.getContextPath() %>/resources/images/mainImage/banner2.png" alt="배너 이미지"></a>
 			</div>
 		</div>
 	</div>
