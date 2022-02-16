@@ -49,6 +49,18 @@ input {
 	color: white;
 }
 
+.inputZipcode {
+	width: 80px;
+	height: 50px;
+	margin: 10px;
+}
+
+.zipcodeBtn {
+	width: 100px;
+	height: 50px;	
+	background-color: lightblue;
+}
+
 .inputTel {
 	width: 100px;
 	height: 50px;

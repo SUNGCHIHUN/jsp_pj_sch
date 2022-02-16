@@ -5,8 +5,8 @@
 <head>
 <meta charset="UTF-8">
 <title>치모 문의등록</title>
-<link href="../../resources/css/common/page.css" rel="stylesheet">
-<link href="../../resources/css/common/board2.css" rel="stylesheet">
+<link href="<%=request.getContextPath() %>/resources/css/common/page.css" rel="stylesheet">
+<link href="<%=request.getContextPath() %>/resources/css/common/board2.css" rel="stylesheet">
 </head>
 <body>
 	<%@ include file="../../common/header.jsp" %>
@@ -34,8 +34,8 @@
 					</tr>
 					<tr>
 						<td colspan="3">
-							<a href="ask_add_action.jsp">등록</a>&nbsp;
-							<a href="ask_list.jsp">취소</a>
+							<a href="<%=request.getContextPath() %>/ask_add_action.do">등록</a>&nbsp;
+							<a href="<%=request.getContextPath() %>/ask_list.do">취소</a>
 						</td>	
 					</tr>
 				</table>

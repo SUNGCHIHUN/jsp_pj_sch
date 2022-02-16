@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>치모 문의 간편등록</title>
-<link href="../../resources/css/common/board2.css" rel="stylesheet">
+<link href="<%=request.getContextPath() %>/resources/css/common/board2.css" rel="stylesheet">
 </head>
 <body>
 	<div id="container">

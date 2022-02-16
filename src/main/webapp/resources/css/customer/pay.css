@@ -73,29 +73,31 @@ table td {
 	height: 30px;
 }
 
+
+.inputAddress {
+	width: 400px;
+	height: 30px;
+}
+
 .inputZipcode {
-	width: 120px;
-	height: 50px;
+	width: 50px;
+	height: 30px;
 	margin: 10px 0;
 }
 
-.inputAddress {
-	width:400px;
-	height: 30px;
-}
-
-.inputZipcode {
-	width:50px;
-	height: 30px;
+.zipcodeBtn {
+	width: 70px;
+	height: 35px;	
+	background-color: lightblue;
 }
 
 .inputTel {
-	width:50px;
+	width: 50px;
 	height: 30px;
 }
 
 .inputMsg {
-	width:400px;
+	width: 400px;
 	height: 30px;
 }
 .payment ul li {

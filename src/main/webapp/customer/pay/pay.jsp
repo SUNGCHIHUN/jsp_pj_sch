@@ -10,7 +10,7 @@
 </head>
 
 <!-- 다음 우편번호 API 사용 -->
-<script src="../../resources/js/zipcode.js" defer></script>
+<script src="<%=request.getContextPath() %>/resources/js/zipcode.js" defer></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
 <body>
@@ -36,7 +36,7 @@
 						<th>합계</th>
 					</tr>
 					<tr>
-						<td><img src="../../resources/images/product/hot6.png" alt="상품이미지"></td>
+						<td><img src="<%=request.getContextPath() %>/resources/images/product/hot6.png" alt="상품이미지"></td>
 						<td>핫식스</td>
 						<td>20,000원</td>
 						<td>1</td>
@@ -44,7 +44,7 @@
 						<td>23,000원</td>
 					</tr>
 					<tr>
-						<td><img src="../../resources/images/product/monster.png" alt="상품이미지"></td>
+						<td><img src="<%=request.getContextPath() %>/resources/images/product/monster.png" alt="상품이미지"></td>
 						<td>몬스터에너지</td>
 						<td>30,000원</td>
 						<td>1</td>
@@ -61,14 +61,14 @@
 						</td>
 					</tr>
 					<tr>
-						<th>받으시는 분</th>
+						<th>받으시는 분 &nbsp; &nbsp; &nbsp; <input type="button" value="본인" onclick="getMyInfo();"></th>
 						<td><input type="text" class="inputOrder" name="order"></td>
 					</tr>
 					<tr>
 						<th>주소</th>
 						<td>
 							<input type="text" class="inputZipcode" id="zipcode" name="zipcode" readonly> 
-							<input type="button" value="우편번호" onclick="setAddress();"><br>
+							<input type="button" value="우편번호" class="zipcodeBtn" onclick="setAddress();"><br>
 							<input type="text" class="inputAddress" id="address1" name="address1" readonly><br><br>
 							<input type="text" class="inputAddress" id="address2" name="address2">
 						</td>

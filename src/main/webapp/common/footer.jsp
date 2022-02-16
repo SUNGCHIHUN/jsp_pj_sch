@@ -73,7 +73,7 @@
 		</div>
 		
 		<div class="footer_ask">
-			<a href="javascript:window.open('../ask/ask_simple_add.jsp', '_blank', 'width=700px; height=700px;')"><img src="<%=request.getContextPath() %>/resources/images/footerImage/ask.png"></a>
+			<a href="javascript:window.open('<%=request.getContextPath() %>/ask_simple_add.do', '_blank', 'width=700px; height=700px;')"><img src="<%=request.getContextPath() %>/resources/images/footerImage/ask.png"></a>
 		</div>
 	</div>
 </body>

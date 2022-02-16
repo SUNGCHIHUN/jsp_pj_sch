@@ -10,6 +10,12 @@
 <link href="<%=request.getContextPath() %>/resources/css/common/main.css" rel="stylesheet">
 <link href="<%=request.getContextPath() %>/resources/css/customer/register.css" rel="stylesheet">
 <script src="<%=request.getContextPath() %>/resources/js/customer/register.js" defer ></script>
+
+<!-- 다음 우편번호 API 사용 -->
+<script src="<%=request.getContextPath() %>/resources/js/zipcode.js" defer></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+
 </head>
 <body>
 	<%@ include file="../../common/header.jsp" %>
@@ -46,7 +52,7 @@
 							<th>주소</th>
 							<td>
 								<input type="number" id="zipcode" class="inputZipcode" name="zipcode" min=0 max=99999 value="63309" disabled>
-								&nbsp; <input type="button" value="우편번호" onclick="setAddress();"><br>
+								<input type="button" value="우편번호" class="zipcodeBtn" onclick="setAddress();"><br>
 								<input type="text" id="address1" class="inputBox" name="address1" value="제주특별자치도 제주시 아라동 첨단로 242" disabled><br>
 								<input type="text" id="address2" class="inputBox" name="address2" value="스페이스닷원">
 							</td>

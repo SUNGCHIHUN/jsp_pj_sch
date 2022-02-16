@@ -12,22 +12,35 @@
 	<div id="container">
 		<div id="section">
 			<div class="login">
-				<form action="login.do" method="post">
+				<form action="<%=request.getContextPath() %>/login_action.do" method="post">
 					<table>
 						<tr>
-							<th><img src="<%=request.getContextPath() %>/resources/images/navImage/logo.png" alt="로고"></th>
+							<th colspan="2"><img src="<%=request.getContextPath() %>/resources/images/navImage/logo.png" alt="로고"></th>
+						</tr>
+						
+						<tr>
+							<th colspan="2" align="center" style="padding: 10px;">
+							<% 	
+								// 로그인 실패
+								if ((Integer)request.getAttribute("loginResult") == 0) {
+									out.print("아이디 또는 비밀번호가 일치하지 않습니다.");
+								} else if((Integer)request.getAttribute("loginResult") == 2) {
+									out.print("CIMO 스토어에 오신 것을 환영합니다!");
+								}
+							%>
+							</th>
 						</tr>
 						<tr>
-							<td><input type="text" class="inputId" name="userId" placeholder="아이디" autofocus required></td>
+							<td colspan="2"><input type="text" class="inputId" name="id" placeholder="아이디" autofocus required></td>
 						</tr>
 						<tr>
-							<td><input type="password" class="inputPassword" name="userPassword" placeholder="비밀번호" required></td>
+							<td colspan="2"><input type="password" class="inputPassword" name="password" placeholder="비밀번호" required></td>
 						</tr>
 						<tr>
-							<td><input type="submit" class="loginBtn" value="로그인"></td>
+							<td colspan="2"><input type="submit" class="loginBtn" value="로그인"></td>
 						</tr>
 						<tr>
-							<td><input type="button" class="registerBtn" value="회원가입" onclick="location.href='<%=request.getContextPath() %>/register.do'"></td>
+							<td colspan="2"><input type="button" class="registerBtn" value="회원가입" onclick="location.href='<%=request.getContextPath() %>/register.do'"></td>
 						</tr>
 					</table>
 				</form>

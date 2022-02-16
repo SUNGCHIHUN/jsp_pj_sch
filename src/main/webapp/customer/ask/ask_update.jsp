@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>치모 문의수정</title>
-<link href="../../resources/css/common/board2.css" rel="stylesheet">
+<link href="<%=request.getContextPath() %>/resources/css/common/board2.css" rel="stylesheet">
 </head>
 <body>
 	<%@ include file="../../common/header.jsp" %>
@@ -36,8 +36,8 @@
 			
 					<tr>
 						<td colspan="3">
-							<a href="ask_update_action.html">수정</a> &nbsp;
-							<a href="ask_detail.html">취소</a>
+							<a href="<%=request.getContextPath() %>/ask_update_action.do">수정</a> &nbsp;
+							<a href="<%=request.getContextPath() %>/ask_detail.do">취소</a>
 						</td>	
 					</tr>
 				</table>

@@ -5,11 +5,11 @@
 <head>
 <meta charset="UTF-8">
 <title>치모 상품상세</title>
-<link href="<%=request.getContextPath() %>/resources/css/common/header.css" rel="stylesheet">
-<link href="<%=request.getContextPath() %>/resources/css/common/footer.css" rel="stylesheet">
 <link href="<%=request.getContextPath() %>/resources/css/common/main.css" rel="stylesheet">
 <link href="<%=request.getContextPath() %>/resources/css/common/page.css" rel="stylesheet">
 <link href="<%=request.getContextPath() %>/resources/css/customer/product_detail.css" rel="stylesheet">
+
+<script src="<%=request.getContextPath()%>/resources/js/customer/product_detail.js"></script>
 </head>
 <body>
 	<%@ include file="../../common/header.jsp" %>
@@ -45,7 +45,7 @@
 					</tr>
 				</table>
 			</div>
-			
+
 			<div class="review">
 				<h1> 제품 리뷰</h1>
 				<table>
@@ -95,7 +95,7 @@
 					</tr>
 					
 					<tr>
-						<td colspan="2" style="text-align:center; border-bottom:none;"><input type="button" class="reviewBtn" value="상품 리뷰 작성하기" onclick="insertReview()"></td>
+						<td colspan="2" style="text-align:center; border-bottom:none;"><input type="button" class="reviewBtn" value="상품 리뷰 작성하기" onclick="addReview()"></td>
 					</tr>
 				</table>
 			</div>

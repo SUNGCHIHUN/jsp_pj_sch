@@ -73,6 +73,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 			}
 		}
 
+		System.out.println("dupChk : " + dupChk);
 		return dupChk;
 	}
 
@@ -82,6 +83,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 		int registerResult = 0;
 		try {
 			conn = dataSource.getConnection();
+			
 			String sql = "INSERT INTO customer(customer_id, customer_password, customer_name, customer_email, customer_tel, zipcode, customer_address)" + 
 						 " VALUES(customers_seq.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, sysdate)";
 			pstmt = conn.prepareStatement(sql);
@@ -109,6 +111,45 @@ public class CustomerDAOImpl implements CustomerDAO {
 		
 		System.out.println("registerResult : " + registerResult);
 		return registerResult;
+	}
+
+	@Override
+	public int loginCheck(String strId, String strPassword) {
+		System.out.println("loginCheck() dao 실행");
+		System.out.println("strId : " + strId);
+		System.out.println("strPassword : " + strPassword);
+		// 로그인 확인 결과 [ 성공:1 실패:0 ]
+		int loginResult = 0;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "SELECT * FROM mvc_customer_tbl WHERE id=? AND password=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, strId);
+			pstmt.setString(2, strPassword);
+
+			// DB에 회원정보 등록 및 결과 반환
+			rs = pstmt.executeQuery();
+			
+			// 결과가 있으면 1 설정
+			if (rs.next()) loginResult = 1;
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			// 자원해제
+			try {
+				if(rs != null) rs.close();
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		System.out.println("loginResult : " + loginResult);
+		return loginResult;
 	}
 
 }
