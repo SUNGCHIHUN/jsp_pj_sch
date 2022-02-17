@@ -23,7 +23,10 @@
 							<% 	
 								// 로그인 실패
 								if ((Integer)request.getAttribute("loginResult") == 0) {
-									out.print("아이디 또는 비밀번호가 일치하지 않습니다.");
+									out.print("존재하지 않는 회원입니다.");
+								// 비밀번호 오류
+								} else if((Integer)request.getAttribute("loginResult") == -1) {
+									out.print("비밀번호가 일치하지 않습니다.");
 								} else if((Integer)request.getAttribute("loginResult") == 2) {
 									out.print("CIMO 스토어에 오신 것을 환영합니다!");
 								}

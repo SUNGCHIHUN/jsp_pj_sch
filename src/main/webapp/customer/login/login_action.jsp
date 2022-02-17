@@ -14,8 +14,13 @@
 		// 로그인 성공
 		if (loginResult == 1) {
 			response.sendRedirect(request.getContextPath() + "/main.do");
-		// 로그인 실패
-		} else if (loginResult == 0){
+		
+		// 로그인 실패[비밀번호 오류]
+		} else if (loginResult == -1){
+			response.sendRedirect(request.getContextPath() + "/login.do?loginResult=" + loginResult);
+		
+		// 로그인 오류
+		} else {
 			response.sendRedirect(request.getContextPath() + "/login.do?loginResult=" + loginResult);
 		}
 	%>

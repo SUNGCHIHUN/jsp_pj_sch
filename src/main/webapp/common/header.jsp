@@ -17,9 +17,10 @@
 			<li><a href="<%=request.getContextPath() %>/ask_list.do">문의사항</a></li>
 		</ul>
 		<ul class="menu2">
-			<li><a href="<%=request.getContextPath() %>/customer_info.do"><img src="<%=request.getContextPath() %>/resources/images/navImage/user-100.png" alt="프로필"></a></li>
+			<li><a href="<%=request.getContextPath() %>/customer_auth_action.do"><img src="<%=request.getContextPath() %>/resources/images/navImage/user-100.png" alt="프로필"></a></li>
 			<li><a href="<%=request.getContextPath() %>/cart_list.do"><img src="<%=request.getContextPath() %>/resources/images/navImage/basket-100.png" alt="장바구니"></a></li>
 			<li><a href="<%=request.getContextPath() %>/login.do"><img src="<%=request.getContextPath() %>/resources/images/navImage/login-100.png" alt="로그인"></a></li>
+			<li><a href="<%=request.getContextPath() %>/logout.do"><img src="<%=request.getContextPath() %>/resources/images/navImage/logout-100.png" alt="로그아웃"></a></li>
 		</ul>
 	</nav>
 	<nav class="menu_bar2">

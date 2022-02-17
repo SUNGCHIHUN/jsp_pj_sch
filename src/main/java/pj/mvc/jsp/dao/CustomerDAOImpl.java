@@ -50,7 +50,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 			conn = dataSource.getConnection();
 			
 			// 해당 아이디 회원 조회 쿼리 및 설정
-			String sql = "SELECT * FROM mvc_customer_tbl WHERE id=?";
+			String sql = "SELECT * FROM Customers WHERE customer_id=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, strId);
 			
@@ -84,17 +84,17 @@ public class CustomerDAOImpl implements CustomerDAO {
 		try {
 			conn = dataSource.getConnection();
 			
-			String sql = "INSERT INTO customer(customer_id, customer_password, customer_name, customer_email, customer_tel, zipcode, customer_address)" + 
+			String sql = "INSERT INTO Customers(customer_no, customer_id, customer_password, customer_name, zipcode, customer_address, customer_tel, customer_email, customer_regist_day)" + 
 						 " VALUES(customers_seq.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, sysdate)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getCustomer_id());
 			pstmt.setString(2, dto.getCustomer_password());
 			pstmt.setString(3, dto.getCustomer_name());
-			pstmt.setString(4, dto.getCustomer_email());
-			pstmt.setString(5, dto.getCustomer_tel());
-			pstmt.setString(6, dto.getZipcode());
-			pstmt.setString(7, dto.getCustomer_address());
-			
+			pstmt.setString(4, dto.getZipcode());
+			pstmt.setString(5, dto.getCustomer_address());
+			pstmt.setString(6, dto.getCustomer_tel());
+			pstmt.setString(7, dto.getCustomer_email());
+
 			// DB에 회원정보 등록 및 결과행 개수 반환
 			registerResult = pstmt.executeUpdate();
 			
@@ -124,17 +124,22 @@ public class CustomerDAOImpl implements CustomerDAO {
 		try {
 			conn = dataSource.getConnection();
 			
-			String sql = "SELECT * FROM mvc_customer_tbl WHERE id=? AND password=?";
+			String sql = "SELECT * FROM Customers WHERE customer_id=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, strId);
-			pstmt.setString(2, strPassword);
 
 			// DB에 회원정보 등록 및 결과 반환
 			rs = pstmt.executeQuery();
 			
-			// 결과가 있으면 1 설정
-			if (rs.next()) loginResult = 1;
-			
+			// 결과가 있으면
+			if (rs.next()) {
+				// 비밀번호 비교
+				if (strPassword.equals(rs.getString("customer_password"))) {
+					loginResult = 1;
+				} else {
+					loginResult = -1;
+				}
+			}
 		} catch(SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -152,4 +157,38 @@ public class CustomerDAOImpl implements CustomerDAO {
 		return loginResult;
 	}
 
+	@Override
+	public int updateCustomer(CustomerDTO dto) {
+		// 회원정보 수정 결과 [ 성공:1 실패:0 ]
+				int updateResult = 0;
+				try {
+					conn = dataSource.getConnection();
+					
+					String sql = "UPDATE Customers" +
+									 " SET password=?, name=?, zipcode=?, address=?, tel=?, email=?" +
+									 " WHERE customer_id=?";
+					pstmt = conn.prepareStatement(sql);
+					pstmt.setString(1, dto.getCustomer_password());
+					pstmt.setString(2, dto.getCustomer_name());
+					pstmt.setString(3, dto.getZipcode());
+					pstmt.setString(4, dto.getCustomer_address());
+					pstmt.setString(5, dto.getCustomer_tel());
+					pstmt.setString(6, dto.getCustomer_email());
+					pstmt.setString(7, dto.getCustomer_id());
+					
+					// DB에 회원정보 등록 및 결과행 개수 반환
+					updateResult = pstmt.executeUpdate();
+					
+				} catch(SQLException e) {
+					e.printStackTrace();
+				} finally {
+					try {
+						if(pstmt != null) pstmt.close();
+						if(conn != null) conn.close();
+					} catch(SQLException e) {
+						e.printStackTrace();
+					}
+				}		
+		return updateResult;
+	}
 }

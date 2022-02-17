@@ -10,6 +10,9 @@ public interface CustomerDAO {
 	// 회원정보 DB 등록
 	int insertCustomer(CustomerDTO dto);
 
+	// 회원정보 DB 수정
+	int updateCustomer(CustomerDTO dto);
+	
 	// 로그인 회원 확인
 	int loginCheck(String strId, String strPassword);
 }

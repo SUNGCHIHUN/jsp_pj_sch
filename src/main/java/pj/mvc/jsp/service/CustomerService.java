@@ -7,6 +7,9 @@ public interface CustomerService {
 	
 //-------------------------- [ 로그인 ] --------------------------------
 
+	// 로그인 상태 조회
+	void loginStateAction(HttpServletRequest req, HttpServletResponse res);
+	
 	// 로그인 처리
 	void loginAction(HttpServletRequest req, HttpServletResponse res);
 		
@@ -22,6 +25,9 @@ public interface CustomerService {
 	void registerAction(HttpServletRequest req, HttpServletResponse res);
 
 //-------------------------- [ 회원정보 ] --------------------------------	
+	
+	// 회원인증
+	void customerAuthAction(HttpServletRequest req, HttpServletResponse res);
 	
 	// 회원정보 조회
 	void selectCustomerAction(HttpServletRequest req, HttpServletResponse res);

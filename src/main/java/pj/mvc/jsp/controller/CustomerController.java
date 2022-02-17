@@ -22,6 +22,14 @@ public class CustomerController extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		shopAction(req, res);
+	}
+
+	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		doGet(req, res);
+	}
+	
+	public void shopAction(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		// 한글 안깨지게 처리
 		req.setCharacterEncoding("UTF-8");
 		
@@ -33,8 +41,10 @@ public class CustomerController extends HttpServlet {
 		
 		String viewPage = "";
 		
-		if (url.equals("/*.do") || url.equals("/main.do")) {
-			System.out.println("[/*.do] or [/main.do] 진입");
+		if (url.equals("/main.do")) {
+			System.out.println("[/main.do] 진입");
+			
+			// 세션에 
 			
 			viewPage = "common/main.jsp";
 			
@@ -42,17 +52,7 @@ public class CustomerController extends HttpServlet {
 		} else if (url.equals("/login.do")) {
 			System.out.println("[/login.do] 진입");
 			
-			// 로그인 상태 체크
-			int loginResult = 2;
-			
-			// 로그인 상태를 가지고있는 request객체가 있으면 받아오기
-			if (req.getParameter("loginResult") != null) {
-				loginResult = Integer.parseInt(req.getParameter("loginResult")); 
-			}
-			
-			// 로그인 상태 설정
-			req.setAttribute("loginResult", loginResult);
-			System.out.println("loginResult : " + loginResult);
+			service.loginStateAction(req, res);
 			
 			viewPage = "customer/login/login.jsp";
 			
@@ -98,14 +98,20 @@ public class CustomerController extends HttpServlet {
 			viewPage = "common/main.jsp";
 			
 		// 회원 인증 및 회원정보 페이지 이동
-		} else if (url.equals("/modify_auth.do")) {
-			System.out.println("[/modify_auth.do] 진입");
+		} else if (url.equals("/customer_auth_action.do")) {
+			System.out.println("[/customer_auth_action.do] 진입");
 
+			service.customerAuthAction(req, res);
+			
+			viewPage = "customer/info/customer_auth_action.jsp";
 			
 		// 회원정보 수정 처리
-		} else if (url.equals("/modify_action.do")) {
-			System.out.println("[/modify_action.do] 진입");
+		} else if (url.equals("/update_customer_action.do")) {
+			System.out.println("[/update_customer_action.do] 진입");
 
+			service.updateCustomerAction(req, res);
+			
+			viewPage = "customer/info/customer_info.jsp";
 			
 		// 상품목록 페이지 이동
 		} else if (url.equals("/product_list.do")) {
@@ -171,10 +177,6 @@ public class CustomerController extends HttpServlet {
 
 		// jsp 화면으로 이동
 		RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
-		dispatcher.forward(req, res);	
-	}
-
-	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		doGet(req, res);
+		dispatcher.forward(req, res);
 	}
 }
