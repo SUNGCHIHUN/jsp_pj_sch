@@ -69,4 +69,12 @@ public class CustomerDTO {
 	public void setCustomer_regist_day(Date customer_regist_day) {
 		this.customer_regist_day = customer_regist_day;
 	}
+
+	@Override
+	public String toString() {
+		return "CustomerDTO [customer_no=" + customer_no + ", customer_id=" + customer_id + ", customer_password="
+				+ customer_password + ", customer_name=" + customer_name + ", customer_email=" + customer_email
+				+ ", customer_tel=" + customer_tel + ", zipcode=" + zipcode + ", customer_address=" + customer_address
+				+ ", customer_regist_day=" + customer_regist_day + "]";
+	}
 }

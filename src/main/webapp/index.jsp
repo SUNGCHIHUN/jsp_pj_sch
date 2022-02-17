@@ -10,7 +10,7 @@
 	<h2>메인 페이지 로딩중..</h2>
 <script type="text/javascript">
 	window.setTimeout(function() {
-		location.href = "http://localhost:8081/<%=request.getContextPath() %>/common/main.jsp";
+		location.href = "http://localhost:8081/<%=request.getContextPath() %>/main.do";
 	}, 500)
 </script>	
 

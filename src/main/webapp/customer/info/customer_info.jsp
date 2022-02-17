@@ -1,5 +1,7 @@
+<%@page import="pj.mvc.jsp.dto.CustomerDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="pj.mvc.jsp.dto.CustomerDTO" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,7 +9,7 @@
 <title>치모 회원정보</title>
 <link href="<%=request.getContextPath() %>/resources/css/common/main.css" rel="stylesheet">
 <link href="<%=request.getContextPath() %>/resources/css/common/page.css" rel="stylesheet">
-<link href="<%=request.getContextPath() %>/resources/css/customer/customerInfo.css" rel="stylesheet">
+<link href="<%=request.getContextPath() %>/resources/css/customer/customer_Info.css" rel="stylesheet">
 
 <!-- 다음 우편번호 API 사용 -->
 <script src="<%=request.getContextPath() %>/resources/js/zipcode.js" defer></script>
@@ -27,45 +29,51 @@
 		<div id="section2">
 			<div class="right">
 				<div class="customer_info">
-					<form action="<%=request.getContextPath() %>/updateCustomerAction.do" method="post">
+					<form action="<%=request.getContextPath() %>/update_customer_action.do" method="post">
 						<table>
 							<tr>
 								<th>아이디</th>
-								<td><input type="text" class="inputBox" name="id" value="hong" readonly></td>
+								<td><input type="text" class="inputBox" name="id" value="<%=((CustomerDTO)request.getAttribute("dto")).getCustomer_id() %>" readonly></td>
 							</tr>
 							<tr>
 								<th>비밀번호</th>
-								<td><input type="password" class="inputBox" name="password" value="hong1234"></td>
+								<td><input type="password" class="inputBox" name="password" value="<%=((CustomerDTO)request.getAttribute("dto")).getCustomer_password() %>"></td>
 							</tr>
 							<tr>
 								<th>이름</th>
-								<td><input type="text" class="inputBox" name="name" value="홍길동"></td>
+								<td><input type="text" class="inputBox" name="name" value="<%=((CustomerDTO)request.getAttribute("dto")).getCustomer_name() %>"></td>
 							</tr>
 							<tr>
 								<th>주소</th>
 								<td>
-									<input type="number" id="zipcode" class="inputZipcode" name="zipcode" min=0 max=99999 value="63309" readonly>
+									<input type="text" id="zipcode" class="inputZipcode" name="zipcode" min=0 max=99999 value="<%=((CustomerDTO)request.getAttribute("dto")).getZipcode() %>" readonly>
 									<input type="button" value="우편번호" class="zipcodeBtn" onclick="setAddress();"><br>
-									<input type="text" id="address1" class="inputBox" name="address1" value="제주특별자치도 제주시 아라동 첨단로 242" readonly><br>
-									<input type="text" id="address2" class="inputBox" name="address2" value="스페이스닷원">
+									<input type="text" id="address1" class="inputBox" name="address1" value="zipcode 생성 예정" readonly><br>
+									<input type="text" id="address2" class="inputBox" name="address2" value="<%=((CustomerDTO)request.getAttribute("dto")).getCustomer_address() %>">
 								</td>
 							</tr>
 							<tr>
 								<th>핸드폰</th>
 								<td>
-									<input type="number" class="inputTel" name="tel1" value="010">
+									<%
+										String[] tel = ((CustomerDTO)request.getAttribute("dto")).getCustomer_tel().split("-");
+									%>
+									<input type="text" class="inputTel" name="tel1" value="<%=tel[0] %>">
 									-
-									<input type="number" class="inputTel" name="tel2" value="1111">
+									<input type="text" class="inputTel" name="tel2" value="<%=tel[1] %>">
 									-
-									<input type="number" class="inputTel" name="tel3" value="2222">
+									<input type="text" class="inputTel" name="tel3" value="<%=tel[2] %>">
 								</td>
 							</tr>
 							<tr>
 								<th>이메일</th>
 								<td>
-									<input type="text" class="inputEmail" name="email1" value="hgd">
+									<%
+										String[] email = ((CustomerDTO)request.getAttribute("dto")).getCustomer_email().split("@");
+									%>
+									<input type="text" class="inputEmail" name="email1" value="<%=email[0] %>">
 									@
-									<input type="text" class="inputEmail" name="email1" value="gmail.com">
+									<input type="text" class="inputEmail" name="email2" value="<%=email[1] %>">
 									<select name="email3" class="selectBox">
 										<option selected>직접입력</option>
 										<option value="gmail.com">구글</option>
@@ -78,7 +86,7 @@
 							<tr>
 								<td colspan="2">
 									<div align="center">
-										<input type="button" class="modifyBtn" value="회원정보수정" onclick="updateCustomer()'">
+										<input type="submit" class="modifyBtn" value="회원정보수정">
 									</div>
 								</td>
 							</tr>

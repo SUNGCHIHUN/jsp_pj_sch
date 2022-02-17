@@ -5,6 +5,9 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface CustomerService {
 	
+	// 디폴트 세션 생성
+	void sessionCheck(HttpServletRequest req, HttpServletResponse res);	
+	
 //-------------------------- [ 로그인 ] --------------------------------
 
 	// 로그인 상태 조회

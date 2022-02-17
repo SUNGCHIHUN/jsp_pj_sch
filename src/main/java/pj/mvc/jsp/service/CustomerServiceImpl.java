@@ -13,10 +13,23 @@ public class CustomerServiceImpl implements CustomerService {
 		this.dao = CustomerDAOImpl.getInstance();
 	}
 
+	@Override
+	public void sessionCheck(HttpServletRequest req, HttpServletResponse res) {
+		System.out.println("sessionCheck() 서비스 실행");
+		// 로그인 고객 아이디 세션
+		if (req.getSession().getAttribute("sessionId") == null)
+			req.getSession().setAttribute("sessionId", "");
+		
+		// 회원정보 조회 인증여부 세션
+		if (req.getSession().getAttribute("authResult") == null)
+			req.getSession().setAttribute("authResult", 0);
+	}
+
 //-------------------------- [ 로그인 ] --------------------------------
 
 	@Override // 로그인 상태 확인
 	public void loginStateAction(HttpServletRequest req, HttpServletResponse res) {
+		System.out.println("loginStateAction() 서비스 실행");
 		// 로그인 상태 체크
 		int loginResult = 2;
 		
@@ -45,8 +58,7 @@ public class CustomerServiceImpl implements CustomerService {
 		loginResult = dao.loginCheck(strId, strPassword);
 		
 		// 로그인 여부에 따라 세션 아이디 설정
-		if (loginResult == 1) req.getSession().setAttribute("id", strId);
-		else req.getSession().setAttribute("id", "");
+		if (loginResult == 1) req.getSession().setAttribute("sessionId", strId);
 		
 		// 회원수정을 위한 인증여부 세션 설정
 		req.getSession().setAttribute("authResult", 0);
@@ -97,7 +109,7 @@ public class CustomerServiceImpl implements CustomerService {
 		dto.setZipcode(req.getParameter("zipcode"));
 		dto.setCustomer_address(req.getParameter("address2"));
 
-		String tel = req.getParameter("tel1") + "-" + req.getParameter("tel1") + "-" + req.getParameter("tel1");
+		String tel = req.getParameter("tel1") + "-" + req.getParameter("tel2") + "-" + req.getParameter("tel3");
 		dto.setCustomer_tel(tel);
 		
 		String email = req.getParameter("email1") + "@" + req.getParameter("email2");
@@ -116,33 +128,50 @@ public class CustomerServiceImpl implements CustomerService {
 	public void customerAuthAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("customerAuthAction() 서비스 실행");
 		
+		// 로그인 성공 여부
+		int loginResult = 0;
+		
 		// 회원의 인증 상태를 세션에서 받아옴
-		int authResult = (Integer)req.getAttribute("authResult");
+		int authResult = 0;
 		
-		// 인증이 이미 끝난 상태이면 인증필요없으므로 인증성공값을 넘긴다.
-		if (authResult == 1) {
-			
-		} else {
+		// 세션이 없으면
+		if (req.getSession().getAttribute("authResult") == null) {
+			// 세션 생성
+			req.getSession().setAttribute("authResult", authResult);
+		} 
+		
+		// 인증이 안되있으면
+		if (authResult == 0) {
 
-		// 인증을 한 적이 없으면 회원을 조회하여 인증을 수행한다.
+			// 인증을 한 적이 없으면 회원을 조회하여 인증을 수행한다.
+			String strId = (String)req.getSession().getAttribute("sessionId");
+			String strPassword = req.getParameter("password");
+			CustomerDAO dao = CustomerDAOImpl.getInstance();
+			loginResult = dao.loginCheck(strId, strPassword);
+			
 		}
-		
-		
-		// 인증 결과를 session 객체에 설정해준다.
+
+		// 인증 결과를 request, session 객체에 설정해준다.
+		req.setAttribute("loginResult", loginResult);
+		req.getSession().setAttribute("authResult", authResult);
 		
 	}
 	
 	@Override // 회원정보 조회
 	public void selectCustomerAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("selectCustomerAction() 서비스 실행");
-		
-		int selectCnt = 0; // 회원정보 조회 성공여부[1:성공 0:실패]
-		
+				
+
 		// 1. 세션 아이디를 받아온다.
-		String sessionId = (String)req.getSession().getAttribute("sessionId");
+		String strId = (String)req.getSession().getAttribute("sessionId");
+		System.out.println("sessionId : " + strId);
 		
-		
-		
+		// 2. 해당 회원의 정보를 조회한다.
+		CustomerDAO dao = CustomerDAOImpl.getInstance();
+		CustomerDTO dto = dao.selectCustomer(strId);
+
+		// 3. request 객체에 저장
+		req.setAttribute("dto", dto);
 		
 	}
 
@@ -157,10 +186,12 @@ public class CustomerServiceImpl implements CustomerService {
 		dto.setCustomer_name(req.getParameter("name"));
 		dto.setZipcode(req.getParameter("zipcode"));
 		dto.setCustomer_address(req.getParameter("address2"));
+		
 		String tel = req.getParameter("tel1") + "-" + 
 						req.getParameter("tel2") + "-" + 
 						req.getParameter("tel3");
 		dto.setCustomer_tel(tel);
+		
 		String email = req.getParameter("email1") + "@" + req.getParameter("email2");
 		dto.setCustomer_email(email);
 		
@@ -169,8 +200,8 @@ public class CustomerServiceImpl implements CustomerService {
 		int updateResult = dao.updateCustomer(dto);
 		
 		// 3. 수정 결과를 request객체에 담아준다. 
-		req.setAttribute("updateCnt", updateResult);
-
+		req.setAttribute("updateResult", updateResult);
+		System.out.println("updateResult : " + updateResult);
 	}
 
 	@Override // 회원정보 삭제
@@ -316,4 +347,5 @@ public class CustomerServiceImpl implements CustomerService {
 		System.out.println("refundAction() 서비스 실행");
 		
 	}
+
 }

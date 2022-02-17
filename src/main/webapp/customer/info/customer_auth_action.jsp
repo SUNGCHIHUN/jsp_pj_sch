@@ -5,33 +5,30 @@
 <head>
 <meta charset="UTF-8">
 <title>회원인증 처리</title>
+<script src="<%=request.getContextPath() %>/resources/js/common/alert_error.js"></script>
 </head>
 <body>
-	<%@ include file="../../common/header.jsp" %>
-		<div id="container">
-		<div id="section1">
-			<div class="section_menu">
-				<ul>
-					<li><a href="<%=request.getContextPath() %>/customer_auth_action.do"><b>회원정보</b></a></li>
-					<li><a href="<%=request.getContextPath() %>/order_list.do">주문목록</a></li>
-				</ul>
-			</div>
-		</div>	
-		<div id="section2">
-		<%
-			// 인증을 한 적이 없는 경우
-			if ((Integer)request.getAttribute("authResult") == 0) {
-				
-			// 인증을 한 적이 있는 경우
-			} else {
-				response.sendRedirect(request.getContextPath() + "/customer_info.do");
-			}
-		
-		%>			
-		</div>
-	</div>
-	
-	
-	<%@ include file="../../common/footer.jsp" %>
+<%
+	// 인증이 안되어 있는 경우
+	if ((Integer)request.getSession().getAttribute("authResult") == 0) {
+		// 비밀번호가 맞는 경우
+		if ((Integer)request.getAttribute("loginResult") == 1) {
+			// 인증 성공 1 설정
+			request.getSession().setAttribute("authResult", 1);
+			response.sendRedirect(request.getContextPath() + "/customer_info.do");
+		} else {
+		%>
+			<script>
+				errorAlert(passwordError);
+				history.go(-1);
+			</script>
+		<%	
+		}
+	// 인증을 성공한 경우
+	} else {
+		response.sendRedirect(request.getContextPath() + "/customer_info.do");
+	}
+
+%>			
 </body>
 </html>

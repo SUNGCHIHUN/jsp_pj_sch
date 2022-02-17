@@ -51,10 +51,10 @@
 						<tr>
 							<th>주소</th>
 							<td>
-								<input type="number" id="zipcode" class="inputZipcode" name="zipcode" min=0 max=99999 value="63309" readonly>
+								<input type="number" id="zipcode" class="inputZipcode" name="zipcode" min=0 max=99999 readonly>
 								<input type="button" value="우편번호" class="zipcodeBtn" onclick="setAddress();"><br>
-								<input type="text" id="address1" class="inputBox" name="address1" value="제주특별자치도 제주시 아라동 첨단로 242" readonly><br>
-								<input type="text" id="address2" class="inputBox" name="address2" value="스페이스닷원">
+								<input type="text" id="address1" class="inputBox" name="address1" readonly><br>
+								<input type="text" id="address2" class="inputBox" name="address2">
 							</td>
 						</tr>
 						<tr>

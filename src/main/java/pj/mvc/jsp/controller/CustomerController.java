@@ -41,10 +41,14 @@ public class CustomerController extends HttpServlet {
 		
 		String viewPage = "";
 		
+		// 메인 페이지 이동
 		if (url.equals("/main.do")) {
 			System.out.println("[/main.do] 진입");
 			
-			// 세션에 
+			service.sessionCheck(req, res);
+			
+			System.out.println("현재 sessionId : " + req.getSession().getAttribute("sessionId"));
+			System.out.println("현재 authResult : " + req.getSession().getAttribute("authResult"));
 			
 			viewPage = "common/main.jsp";
 			
@@ -95,9 +99,15 @@ public class CustomerController extends HttpServlet {
 			// 세션 해제
 			service.logoutAction(req, res);
 		
-			viewPage = "common/main.jsp";
+			viewPage = "customer/logout/logout.jsp";
 			
-		// 회원 인증 및 회원정보 페이지 이동
+		// 회원인증 페이지 이동
+		} else if (url.equals("/customer_auth.do")) {
+			System.out.println("[/customer_auth.do] 진입");
+			
+			viewPage = "customer/info/customer_auth.jsp";
+			
+		// 회원인증 처리
 		} else if (url.equals("/customer_auth_action.do")) {
 			System.out.println("[/customer_auth_action.do] 진입");
 
@@ -105,13 +115,21 @@ public class CustomerController extends HttpServlet {
 			
 			viewPage = "customer/info/customer_auth_action.jsp";
 			
+		// 회원정보 조회
+		}else if (url.equals("/customer_info.do")) {
+			System.out.println("[/customer_info.do] 진입");
+			
+			service.selectCustomerAction(req, res);
+			
+			viewPage = "customer/info/customer_info.jsp";
+			
 		// 회원정보 수정 처리
 		} else if (url.equals("/update_customer_action.do")) {
 			System.out.println("[/update_customer_action.do] 진입");
 
 			service.updateCustomerAction(req, res);
 			
-			viewPage = "customer/info/customer_info.jsp";
+			viewPage = "customer/info/update_customer_action.jsp";
 			
 		// 상품목록 페이지 이동
 		} else if (url.equals("/product_list.do")) {
