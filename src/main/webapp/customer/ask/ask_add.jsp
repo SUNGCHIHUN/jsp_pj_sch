@@ -1,12 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="../../common/setting.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>치모 문의등록</title>
-<link href="<%=request.getContextPath() %>/resources/css/common/page.css" rel="stylesheet">
-<link href="<%=request.getContextPath() %>/resources/css/common/board2.css" rel="stylesheet">
+<link href="${path}/resources/css/common/page.css" rel="stylesheet">
+<link href="${path}/resources/css/common/board2.css" rel="stylesheet">
 </head>
 <body>
 	<%@ include file="../../common/header.jsp" %>
@@ -34,8 +35,8 @@
 					</tr>
 					<tr>
 						<td colspan="3">
-							<a href="<%=request.getContextPath() %>/ask_add_action.do">등록</a>&nbsp;
-							<a href="<%=request.getContextPath() %>/ask_list.do">취소</a>
+							<a href="${path}/ask_add_action.do">등록</a>&nbsp;
+							<a href="${path}/ask_list.do">취소</a>
 						</td>	
 					</tr>
 				</table>

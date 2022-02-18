@@ -1,32 +1,30 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="../../common/setting.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>회원수정 처리</title>
-<script src="<%=request.getContextPath() %>/resources/js/common/alert_error.js"></script>
+<script src="${path}/resources/js/common/alert_error.js"></script>
 </head>
 <body>
-	<%
-		// 회원정보 수정을 성공하면
-		if ((Integer)request.getAttribute("updateResult") == 1) {
-	%>
-			<script>
-				alert("회원정보가 수정되었습니다.");
-				window.location="<%=request.getContextPath() %>/customer_info.do";
-			</script>
-	<%
-			
-		// 회원정보 수정을 실패하면
-		} else {
-	%>
-			<script>
-				errorAlert(updateError);
-				window.history.back();
-			</script>
-	<%
-		}
-	%>
+	<%-- 회원수정 성공 --%>
+	<c:if test="${updateResult == 1}">
+		<%-- 회원정보가 수정되었기 때문에 세션을 해제하여 다시 인증 요청 --%>
+		<c:remove var="authResult" scope="session" />
+		<script>
+			alert("회원정보가 수정되었습니다.");
+			window.location="${path}/customer_auth.do";
+		</script>
+	</c:if>
+
+	<%-- 회원수정 실패 --%>
+	<c:if test="${updateResult != 1}">
+		<script>
+			errorAlert(updateError);
+			window.history.back();
+		</script>
+	</c:if>
 </body>
 </html>

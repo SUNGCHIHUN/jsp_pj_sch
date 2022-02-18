@@ -1,16 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="../../common/setting.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>치모 결제하기</title>
-<link href="<%=request.getContextPath() %>/resources/css/common/main.css" rel="stylesheet">
-<link href="<%=request.getContextPath() %>/resources/css/customer/pay.css" rel="stylesheet">
+<link href="${path}/resources/css/common/main.css" rel="stylesheet">
+<link href="${path}/resources/css/customer/pay.css" rel="stylesheet">
 </head>
 
 <!-- 다음 우편번호 API 사용 -->
-<script src="<%=request.getContextPath() %>/resources/js/zipcode.js" defer></script>
+<script src="${path}/resources/js/zipcode.js" defer></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
 <body>
@@ -36,7 +37,7 @@
 						<th>합계</th>
 					</tr>
 					<tr>
-						<td><img src="<%=request.getContextPath() %>/resources/images/product/hot6.png" alt="상품이미지"></td>
+						<td><img src="${path}/resources/images/product/hot6.png" alt="상품이미지"></td>
 						<td>핫식스</td>
 						<td>20,000원</td>
 						<td>1</td>
@@ -44,7 +45,7 @@
 						<td>23,000원</td>
 					</tr>
 					<tr>
-						<td><img src="<%=request.getContextPath() %>/resources/images/product/monster.png" alt="상품이미지"></td>
+						<td><img src="${path}/resources/images/product/monster.png" alt="상품이미지"></td>
 						<td>몬스터에너지</td>
 						<td>30,000원</td>
 						<td>1</td>

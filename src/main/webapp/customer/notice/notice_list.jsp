@@ -1,12 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="../../common/setting.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>치모 공지사항</title>
-<link href="../../resources/css/common/page.css" rel="stylesheet">
-<link href="../../resources/css/common/board1.css" rel="stylesheet">
+<link href="${path}/resources/css/common/page.css" rel="stylesheet">
+<link href="${path}/resources/css/common/board1.css" rel="stylesheet">
 </head>
 <body>
 	<!-- header -->
@@ -27,7 +28,7 @@
 					</tr>
 					<tr>
 						<td>1</td>
-						<td><a href="../notice/notice_detail.jsp">[공지] 홈페이지 리뉴얼 안내 (2022년 1월 22일부)</a></td>
+						<td><a href="${path}/notice_detail.do">[공지] 홈페이지 리뉴얼 안내 (2022년 1월 22일부)</a></td>
 						<td><img src="#" alt="파일"></td>
 						<td>관리자</td>
 						<td>2022-01-22</td>

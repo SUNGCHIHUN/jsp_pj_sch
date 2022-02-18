@@ -13,7 +13,9 @@ public class CustomerServiceImpl implements CustomerService {
 		this.dao = CustomerDAOImpl.getInstance();
 	}
 
-	@Override
+//-------------------------- [ 세션 ] --------------------------------
+	
+	@Override // 세션 초기화
 	public void sessionCheck(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("sessionCheck() 서비스 실행");
 		// 로그인 고객 아이디 세션
@@ -44,7 +46,7 @@ public class CustomerServiceImpl implements CustomerService {
 		
 	}
 	
-	@Override
+	@Override // 로그인 처리
 	public void loginAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("loginAction() 서비스 실행");
 		// 로그인 성공 여부
@@ -66,15 +68,17 @@ public class CustomerServiceImpl implements CustomerService {
 		// 로그인 성공 여부 설정
 		req.setAttribute("loginResult", loginResult);
 	}
-
+	
 	@Override
 	public void logoutAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("logoutAction() 서비스 실행");
+		
 		// 세션 해제
 		req.getSession().invalidate();
+		
 	}
 	
-	@Override
+	@Override // 아이디 중복 체크
 	public void confirmIdAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("confirmIdAction() 서비스 실행");
 		// 아이디 중복 여부
@@ -92,7 +96,7 @@ public class CustomerServiceImpl implements CustomerService {
 		// 입력받은 아이디 request 객체에 설정
 		req.setAttribute("strId", strId);
 	}
-
+	
 //-------------------------- [ 회원가입 ] --------------------------------		
 
 	@Override	// 회원가입 처리
@@ -160,7 +164,6 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override // 회원정보 조회
 	public void selectCustomerAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("selectCustomerAction() 서비스 실행");
-				
 
 		// 1. 세션 아이디를 받아온다.
 		String strId = (String)req.getSession().getAttribute("sessionId");
@@ -207,6 +210,16 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override // 회원정보 삭제
 	public void deleteCustomerAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("deleteCustomerAction() 서비스 실행");
+		
+		// 1. 회원 세션 아이디를 받아온다.
+		String strId = (String)req.getSession().getAttribute("sessionId");
+		
+		// 2. DAO를 생성하여 로그인한 고객 아이디로 DB delete를 수행한다.
+		CustomerDAO dao = CustomerDAOImpl.getInstance();
+		int deleteResult = dao.deleteCustomer(strId);
+		
+		// 3. 삭제 결과를 request객체에 담아준다.
+		req.setAttribute("deleteResult", deleteResult);
 		
 	}
 

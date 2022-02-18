@@ -1,11 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="setting.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>지모 푸터</title>
-<link href="<%=request.getContextPath() %>/resources/css/common/footer.css" rel="stylesheet">
+<link href="${path}/resources/css/common/footer.css" rel="stylesheet">
 </head>
 <body>
 	<div id="footer">
@@ -73,7 +74,7 @@
 		</div>
 		
 		<div class="footer_ask">
-			<a href="javascript:window.open('<%=request.getContextPath() %>/ask_simple_add.do', '_blank', 'width=700px; height=700px;')"><img src="<%=request.getContextPath() %>/resources/images/footerImage/ask.png"></a>
+			<a href="javascript:window.open('${path}/ask_simple_add.do', '_blank', 'width=700px; height=700px;')"><img src="${path}/resources/images/footerImage/ask.png"></a>
 		</div>
 	</div>
 </body>

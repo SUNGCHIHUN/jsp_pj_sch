@@ -16,6 +16,9 @@ public interface CustomerDAO {
 	// 회원정보 DB 수정
 	int updateCustomer(CustomerDTO dto);
 	
+	// 회원정보 DB 삭제
+	int deleteCustomer(String strId);
+	
 	// 로그인 회원 확인
 	int loginCheck(String strId, String strPassword);
 }

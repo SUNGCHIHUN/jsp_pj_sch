@@ -1,13 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="../../common/setting.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>치모 상품상세</title>
-<link href="<%=request.getContextPath() %>/resources/css/common/main.css" rel="stylesheet">
-<link href="<%=request.getContextPath() %>/resources/css/common/page.css" rel="stylesheet">
-<link href="<%=request.getContextPath() %>/resources/css/customer/product_detail.css" rel="stylesheet">
+<link href="${path}/resources/css/common/main.css" rel="stylesheet">
+<link href="${path}/resources/css/common/page.css" rel="stylesheet">
+<link href="${path}/resources/css/customer/product_detail.css" rel="stylesheet">
 
 <script src="<%=request.getContextPath()%>/resources/js/customer/product_detail.js"></script>
 </head>
@@ -23,7 +24,7 @@
 				<table>
 					<tr>
 						<td>
-							<img src="<%=request.getContextPath() %>/resources/images/product/hot6.png" alt="상품 이미지">
+							<img src="${path}/resources/images/product/hot6.png" alt="상품 이미지">
 						</td>
 						<td>
 							<ul>

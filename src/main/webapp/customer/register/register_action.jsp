@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="../../common/setting.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,22 +8,18 @@
 <title>회원가입 처리중...</title>
 </head>
 <body>
-<% 
-	if((Integer)request.getAttribute("registerResult") == 1) {
-%>
+	<c:if test="${registerResult == 1}">
 		<script>
 			alert("회원가입에 성공하였습니다.");
+			window.location="${path}/login.do";
 		</script>
-<%
-		response.sendRedirect("login.do");
-	} else {
-%>
+	</c:if>
+	
+	<c:if test="${registerResult != 1}">
 		<script>
 			alert("회원가입에 실패하였습니다.");
 			window.history.back();
 		</script>
-<%
-	}
-%>
+	</c:if>
 </body>
 </html>

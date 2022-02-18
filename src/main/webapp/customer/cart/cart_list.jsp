@@ -1,12 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="../../common/setting.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>치모 장바구니</title>
-<link href="<%=request.getContextPath() %>/resources/css/common/main.css" rel="stylesheet">
-<link href="<%=request.getContextPath() %>/resources/css/customer/cart.css" rel="stylesheet">
+<link href="${path}/resources/css/common/main.css" rel="stylesheet">
+<link href="${path}/resources/css/customer/cart.css" rel="stylesheet">
 </head>
 <body>
 	<%@ include file="../../common/header.jsp" %>
@@ -36,7 +37,7 @@
 					</tr>
 					<tr>
 						<td><input type="checkbox" name="cart"></td>
-						<td><img src="<%=request.getContextPath() %>/resources/images/product/hot6.png" alt="상품이미지"></td>
+						<td><img src="${path}/resources/images/product/hot6.png" alt="상품이미지"></td>
 						<td>핫식스</td>
 						<td>20,000원</td>
 						<td>
@@ -51,7 +52,7 @@
 					</tr>
 					<tr>
 						<td><input type="checkbox" name="cart"></td>
-						<td><img src="<%=request.getContextPath() %>/resources/images/product/monster.png" alt="상품이미지"></td>
+						<td><img src="${path}/resources/images/product/monster.png" alt="상품이미지"></td>
 						<td>몬스터에너지</td>
 						<td>30,000원</td>
 						<td>

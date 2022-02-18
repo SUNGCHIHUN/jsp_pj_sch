@@ -1,18 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="../../common/setting.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>치모 회원가입</title>
-<link href="<%=request.getContextPath() %>/resources/css/common/header.css" rel="stylesheet">
-<link href="<%=request.getContextPath() %>/resources/css/common/footer.css" rel="stylesheet">
-<link href="<%=request.getContextPath() %>/resources/css/common/main.css" rel="stylesheet">
-<link href="<%=request.getContextPath() %>/resources/css/customer/register.css" rel="stylesheet">
-<script src="<%=request.getContextPath() %>/resources/js/customer/register.js" defer ></script>
+<link href="${path}/resources/css/common/header.css" rel="stylesheet">
+<link href="${path}/resources/css/common/footer.css" rel="stylesheet">
+<link href="${path}/resources/css/common/main.css" rel="stylesheet">
+<link href="${path}/resources/css/customer/register.css" rel="stylesheet">
+<script src="${path}/resources/js/customer/register.js" defer ></script>
 
 <!-- 다음 우편번호 API 사용 -->
-<script src="<%=request.getContextPath() %>/resources/js/zipcode.js" defer></script>
+<script src="${path}/resources/js/zipcode.js" defer></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
 
@@ -22,11 +23,11 @@
 	<div id="container">
 		<div id="section">
 			<div class="register">
-				<form action="<%=request.getContextPath() %>/register_action.do" name="register_form" method="post" onsubmit="return registerCheck()">
+				<form action="${path}/register_action.do" name="register_form" method="post" onsubmit="return registerCheck()">
 					<input type="hidden" name="hiddenIdCheck" value=0>
 					<table>
 						<tr>
-							<th colspan="2"><img src="<%=request.getContextPath() %>/resources/images/navImage/logo.png" alt="로고"></th>
+							<th colspan="2"><img src="${path}/resources/images/navImage/logo.png" alt="로고"></th>
 						</tr>
 						<tr>
 							<th> 아이디 </th>

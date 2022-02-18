@@ -1,12 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="../../common/setting.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>치모 주문목록</title>
-<link href="<%=request.getContextPath() %>/resources/css/common/page.css" rel="stylesheet">
-<link href="<%=request.getContextPath() %>/resources/css/customer/order.css" rel="stylesheet">
+<link href="${path}/resources/css/common/page.css" rel="stylesheet">
+<link href="${path}/resources/css/customer/order.css" rel="stylesheet">
 </head>
 <body>
 	<%@ include file="../../common/header.jsp" %>
@@ -14,8 +15,8 @@
 		<div id="section1">
 			<div class="section_menu">
 				<ul>
-					<li><a href="../info/customer_info.jsp">회원정보</a></li>
-					<li><a href="../order/order_list.jsp"><b>주문내역</b></a></li>
+					<li><a href="${path}/customer_info.do">회원정보</a></li>
+					<li><a href="${path}/order_list.do"><b>주문내역</b></a></li>
 				</ul>
 			</div>
 		</div>	
@@ -51,13 +52,13 @@
 						<td>
 							2022-01-25
 						</td>
-						<td><a href="../product/product_detail.html"><img src="../../resources/images/product/hot6.png" alt="상품이미지"></a></td>
+						<td><a href="${path}/product_detail.do"><img src="${path}]/resources/images/product/hot6.png" alt="상품이미지"></a></td>
 						<td>핫식스</td>
 						<td>1</td>
 						<td>20,000</td>
 						<td>
 							배송완료<br>
-							<input type="button" value="조회" class="selectBtn" onclick="window.open('../../manager/delivery/delivery_detail.jsp', '_blank', 'width=650,height=600')">
+							<input type="button" value="조회" class="selectBtn" onclick="window.open('${path}/manager/delivery/delivery_detail.do', '_blank', 'width=650,height=600')">
 						</td>
 						<td>
 							<input type="button" value="환불" class="refundBtn" onclick="refund()">

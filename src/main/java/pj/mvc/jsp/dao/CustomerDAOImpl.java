@@ -41,7 +41,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 		return instance;
 	}
 	
-	@Override
+	@Override // 회원가입 시 아이디 중복확인
 	public int confirmId(String strId) {
 		int dupChk = 0;
 		try {
@@ -77,7 +77,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 		return dupChk;
 	}
 
-	@Override
+	@Override // 회원정보 DB 등록
 	public int insertCustomer(CustomerDTO dto) {
 		// 회원가입 결과 [ 성공:1 실패:0 ]
 		int registerResult = 0;
@@ -113,7 +113,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 		return registerResult;
 	}
 
-	@Override
+	@Override // 로그인 체크
 	public int loginCheck(String strId, String strPassword) {
 		System.out.println("loginCheck() dao 실행");
 		System.out.println("strId : " + strId);
@@ -158,10 +158,11 @@ public class CustomerDAOImpl implements CustomerDAO {
 		return loginResult;
 	}
 
-	@Override
+	@Override // 회원정보 DB 수정
 	public int updateCustomer(CustomerDTO dto) {
 		// 회원정보 수정 결과 [ 성공:1 실패:0 ]
 		int updateResult = 0;
+		
 		try {
 			conn = dataSource.getConnection();
 			
@@ -193,7 +194,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 		return updateResult;
 	}
 
-	@Override
+	@Override // 회원정보 DB 조회
 	public CustomerDTO selectCustomer(String strId) {
 		// 회원정보 데이터를 담을 DTO
 		CustomerDTO dto = new CustomerDTO();
@@ -233,5 +234,33 @@ public class CustomerDAOImpl implements CustomerDAO {
 			}
 		}		
 		return dto;
+	}
+
+	@Override // 회원정보 DB 삭제
+	public int deleteCustomer(String strId) {
+		// 회원정보 삭제 결과 [ 성공:1 실패:0 ]
+		int deleteResult = 0;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "DELETE FROM Customers WHERE customer_id=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, strId);
+			
+			// DB에 회원정보 등록 및 결과행 개수 반환
+			deleteResult = pstmt.executeUpdate();
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}		
+		return deleteResult;
 	}
 }

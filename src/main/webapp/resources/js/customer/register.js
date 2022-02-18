@@ -101,3 +101,11 @@ function inputIdCheck() {
 	// 중복확인이 필요한 상태로 설정
 	document.register_form.hiddenIdCheck.value = 0;
 }
+
+// 회원탈퇴 확인창
+function deleteCustomer(path) {
+	// 확인을 누른 경우
+	if(confirm("정말로 탈퇴하시겠습니까?")) {
+		window.location=path + "/delete_customer_action.do";
+	}
+}

@@ -1,12 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="../../common/setting.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>치모 문의사항</title>
-<link href="<%=request.getContextPath() %>/resources/css/common/page.css" rel="stylesheet">
-<link href="<%=request.getContextPath() %>/resources/css/common/board1.css" rel="stylesheet">
+<link href="${path}/resources/css/common/page.css" rel="stylesheet">
+<link href="${path}/resources/css/common/board1.css" rel="stylesheet">
 </head>
 <body>
 	<!-- header -->
@@ -26,13 +27,13 @@
 					</tr>
 					<tr>
 						<td>1</td>
-						<td><a href="<%=request.getContextPath() %>/ask_detail.do">회원가입은 어떻게 하는 건가요?</a></td>
+						<td><a href="${path}/ask_detail.do">회원가입은 어떻게 하는 건가요?</a></td>
 						<td>홍길동</td>
 						<td>2022-01-22</td>
 						<td>답변대기</td>
 					</tr>
 					<tr align="center">
-						<td colspan="5"><a href="<%=request.getContextPath() %>/ask_add.do">문의하기</a></td>
+						<td colspan="5"><a href="${path}/ask_add.do">문의하기</a></td>
 					</tr>
 				</table>
 	 			<div id="page">

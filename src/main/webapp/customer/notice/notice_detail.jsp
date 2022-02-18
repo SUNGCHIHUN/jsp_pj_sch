@@ -1,11 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="../../common/setting.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>치모 공지사항</title>
-<link href="../../resources/css/common/board2.css" rel="stylesheet">
+<link href="${path}/resources/css/common/board2.css" rel="stylesheet">
 </head>
 <body>
 	<!-- header -->
@@ -47,7 +48,7 @@
 					</tr>
 					
 					<tr>
-						<td colspan="3" style="text-align:left; padding-left:40px;"><a href="notice_list.jsp">목록</a></td>
+						<td colspan="3" style="text-align:left; padding-left:40px;"><a href="${path}/notice_list.do">목록</a></td>
 					</tr>
 				</table>
 				

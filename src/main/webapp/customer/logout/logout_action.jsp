@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="../../common/setting.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,10 +8,9 @@
 <title>로그아웃 처리</title>
 </head>
 <body>
-	<%
-		// 세션 해제 후 메인으로 이동
-		request.getSession().invalidate();
-		response.sendRedirect(request.getContextPath() + "/main.do");
-	%>
+	<script>
+		alert("로그아웃되었습니다.");
+		window.location="${path}/main.do";
+	</script>
 </body>
 </html>

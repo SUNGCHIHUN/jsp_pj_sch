@@ -15,7 +15,7 @@ public interface CustomerService {
 	
 	// 로그인 처리
 	void loginAction(HttpServletRequest req, HttpServletResponse res);
-		
+	
 	// 로그아웃 처리
 	void logoutAction(HttpServletRequest req, HttpServletResponse res);
 
