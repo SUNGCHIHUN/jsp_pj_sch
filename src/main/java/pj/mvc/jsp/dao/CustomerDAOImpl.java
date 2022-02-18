@@ -113,8 +113,8 @@ public class CustomerDAOImpl implements CustomerDAO {
 		return registerResult;
 	}
 
-	@Override // 로그인 체크
-	public int loginCheck(String strId, String strPassword) {
+	@Override // 아이디, 비밀번호 체크
+	public int idPasswordCheck(String strId, String strPassword) {
 		System.out.println("loginCheck() dao 실행");
 		System.out.println("strId : " + strId);
 		System.out.println("strPassword : " + strPassword);

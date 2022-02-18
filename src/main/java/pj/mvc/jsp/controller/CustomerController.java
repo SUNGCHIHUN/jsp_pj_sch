@@ -60,8 +60,6 @@ public class CustomerController extends HttpServlet {
 		} else if (url.equals("/login.do")) {
 			System.out.println("[/login.do] 진입");
 			
-			service.loginStateAction(req, res);
-			
 			viewPage = "customer/login/login.jsp";
 			
 		// 로그인 처리
@@ -140,13 +138,15 @@ public class CustomerController extends HttpServlet {
 			
 			viewPage = "customer/info/delete_customer_action.jsp";
 			
-		// 상품목록 페이지 이동
+		// 상품목록 조회
 		} else if (url.equals("/product_list.do")) {
 			System.out.println("[/product_list.do] 진입");
 
+			service.selectProductListAction(req, res);
+			
 			viewPage = "customer/product/product_list.jsp";
 
-		// 상품상세 페이지 이동
+		// 상품상세 페이지 조회
 		} else if (url.equals("/product_detail.do")) {
 			System.out.println("[/product_detail.do] 진입");
 

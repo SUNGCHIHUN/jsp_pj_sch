@@ -15,7 +15,8 @@
 
 .product ul li {
 	font-size: 20px;
-	text-align: left;
+	text-align: center;
+	margin-top: 10px;
 }
 
 .search {

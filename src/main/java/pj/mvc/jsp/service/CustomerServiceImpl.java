@@ -1,11 +1,16 @@
 package pj.mvc.jsp.service;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import pj.mvc.jsp.dao.CustomerDAO;
 import pj.mvc.jsp.dao.CustomerDAOImpl;
+import pj.mvc.jsp.dao.ProductDAO;
+import pj.mvc.jsp.dao.ProductDAOImpl;
 import pj.mvc.jsp.dto.CustomerDTO;
+import pj.mvc.jsp.dto.ProductDTO;
 
 public class CustomerServiceImpl implements CustomerService {
 	CustomerDAO dao;
@@ -18,6 +23,12 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override // 세션 초기화
 	public void sessionCheck(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("sessionCheck() 서비스 실행");
+		
+		// 로그인 상태 세션
+		if (req.getSession().getAttribute("loginResult") == null) {
+			req.getSession().setAttribute("loginResult", 2);
+		}
+		
 		// 로그인 고객 아이디 세션
 		if (req.getSession().getAttribute("sessionId") == null)
 			req.getSession().setAttribute("sessionId", "");
@@ -25,26 +36,10 @@ public class CustomerServiceImpl implements CustomerService {
 		// 회원정보 조회 인증여부 세션
 		if (req.getSession().getAttribute("authResult") == null)
 			req.getSession().setAttribute("authResult", 0);
+		
 	}
 
 //-------------------------- [ 로그인 ] --------------------------------
-
-	@Override // 로그인 상태 확인
-	public void loginStateAction(HttpServletRequest req, HttpServletResponse res) {
-		System.out.println("loginStateAction() 서비스 실행");
-		// 로그인 상태 체크
-		int loginResult = 2;
-		
-		// 로그인 상태를 가지고있는 request객체가 있으면 받아와 설정
-		if (req.getParameter("loginResult") != null) {
-			loginResult = Integer.parseInt(req.getParameter("loginResult")); 
-		}
-		
-		// 로그인 상태 설정
-		req.setAttribute("loginResult", loginResult);
-		System.out.println("loginResult : " + loginResult);		
-		
-	}
 	
 	@Override // 로그인 처리
 	public void loginAction(HttpServletRequest req, HttpServletResponse res) {
@@ -57,7 +52,7 @@ public class CustomerServiceImpl implements CustomerService {
 		String strPassword = req.getParameter("password");
 		
 		// DB에서 로그인 정보 확인
-		loginResult = dao.loginCheck(strId, strPassword);
+		loginResult = dao.idPasswordCheck(strId, strPassword);
 		
 		// 로그인 여부에 따라 세션 아이디 설정
 		if (loginResult == 1) req.getSession().setAttribute("sessionId", strId);
@@ -151,7 +146,7 @@ public class CustomerServiceImpl implements CustomerService {
 			String strId = (String)req.getSession().getAttribute("sessionId");
 			String strPassword = req.getParameter("password");
 			CustomerDAO dao = CustomerDAOImpl.getInstance();
-			loginResult = dao.loginCheck(strId, strPassword);
+			loginResult = dao.idPasswordCheck(strId, strPassword);
 			
 		}
 
@@ -223,26 +218,18 @@ public class CustomerServiceImpl implements CustomerService {
 		
 	}
 
-//-------------------------------------- [ 공지사항 ] --------------------------------------------	
-
-	@Override // 공지사항 조회
-	public void selectNoticeListAction(HttpServletRequest req, HttpServletResponse res) {
-		System.out.println("selectNoticeListAction() 서비스 실행");
-
-	}
-
-	@Override // 공지사항 상세조회
-	public void selectNoticeDetailAction(HttpServletRequest req, HttpServletResponse res) {
-		System.out.println("selectNoticeDetailAction() 서비스 실행");
-		
-	}
-	
 //-------------------------------------- [ 상품 ] --------------------------------------------	
 
 	@Override // 상품조회
 	public void selectProductListAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("selectProductListAction() 서비스 실행");
 		
+		// 1. DAO를 생성하여 DB에서 상품조회
+		ProductDAO dao = ProductDAOImpl.getInstance();
+		Map<String, ProductDTO> plist = dao.selectProduct();
+		
+		// 2. 조회된 상품정보를 request객체에 저장
+		req.setAttribute("plist", plist);
 	}
 
 	@Override // 상품 상세조회
@@ -256,7 +243,21 @@ public class CustomerServiceImpl implements CustomerService {
 		System.out.println("buyProductAction() 서비스 실행");
 		
 	}
-	
+
+//-------------------------------------- [ 공지사항 ] --------------------------------------------	
+
+	@Override // 공지사항 조회
+	public void selectNoticeListAction(HttpServletRequest req, HttpServletResponse res) {
+		System.out.println("selectNoticeListAction() 서비스 실행");
+
+	}
+
+	@Override // 공지사항 상세조회
+	public void selectNoticeDetailAction(HttpServletRequest req, HttpServletResponse res) {
+		System.out.println("selectNoticeDetailAction() 서비스 실행");
+		
+	}
+			
 //-------------------------------------- [ 상품리뷰 ] --------------------------------------------	
 
 	@Override // 상품리뷰 조회

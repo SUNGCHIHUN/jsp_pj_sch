@@ -1,0 +1,23 @@
+@charset "UTF-8";
+
+#title {
+	text-align: center;
+}
+
+table {
+	width: 1000px;
+	border-collapse: collapse;
+}
+
+th {
+	background-color: lightgray;
+	border-bottom: 1px solid gray;
+	text-align: center;
+	padding: 10px 0;
+}
+
+td {
+	border-bottom: 1px solid lightgray;
+	height: 40px;
+	text-align: center;
+}
