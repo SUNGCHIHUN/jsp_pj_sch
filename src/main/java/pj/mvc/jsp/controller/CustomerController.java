@@ -21,15 +21,21 @@ public class CustomerController extends HttpServlet {
         service = new CustomerServiceImpl();
     }
 
-	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse res) 
+			throws ServletException, IOException {
+		
 		shopAction(req, res);
 	}
 
-	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest req, HttpServletResponse res) 
+			throws ServletException, IOException {
+		
 		doGet(req, res);
 	}
 	
-	public void shopAction(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+	public void shopAction(HttpServletRequest req, HttpServletResponse res) 
+			throws ServletException, IOException {
+		
 		// 한글 안깨지게 처리
 		req.setCharacterEncoding("UTF-8");
 
