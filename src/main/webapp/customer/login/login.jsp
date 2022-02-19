@@ -21,17 +21,12 @@
 						
 						<tr>
 							<th colspan="2" align="center" style="padding: 10px;">
-							<% 	
-								// 로그인 실패
-								if ((Integer)request.getAttribute("loginResult") == 0) {
-									out.print("존재하지 않는 회원입니다.");
-								// 비밀번호 오류
-								} else if((Integer)request.getAttribute("loginResult") == -1) {
-									out.print("비밀번호가 일치하지 않습니다.");
-								} else if((Integer)request.getAttribute("loginResult") == 2) {
-									out.print("CIMO 스토어에 오신 것을 환영합니다!");
-								}
-							%>
+							<c:choose>
+								<c:when test="${loginResult == 0}">존재하지 않는 회원입니다.</c:when>
+								<c:when test="${loginResult == -1}">비밀번호가 일치하지 않습니다.</c:when>
+								<c:when test="${loginResult == 2}">CIMO 스토어에 오신 것을 환영합니다!</c:when>
+								<c:otherwise></c:otherwise>
+							</c:choose>
 							</th>
 						</tr>
 						<tr>

@@ -37,14 +37,6 @@ public interface CustomerService {
 	
 	// 회원 탈퇴
 	void deleteCustomerAction(HttpServletRequest req, HttpServletResponse res);
-	
-//-------------------------- [ 공지사항 ] --------------------------------	
-
-	// 공지사항 조회
-	void selectNoticeListAction(HttpServletRequest req, HttpServletResponse res);
-
-	// 공지사항 상세조회
-	void selectNoticeDetailAction(HttpServletRequest req, HttpServletResponse res);
 
 //-------------------------- [ 상품 ] --------------------------------	
 	
@@ -58,10 +50,7 @@ public interface CustomerService {
 	void buyProductAction(HttpServletRequest req, HttpServletResponse res);
 	
 //-------------------------- [ 상품리뷰 ] --------------------------------	
-	
-	// 상품리뷰 조회
-	void selectProductReviewListAction(HttpServletRequest req, HttpServletResponse res);
-	
+
 	// 상품리뷰 등록
 	void insertReviewAction(HttpServletRequest req, HttpServletResponse res);
 	
@@ -81,23 +70,23 @@ public interface CustomerService {
 	
 	// 장바구니 상품구매
 	void buyCartProductAction(HttpServletRequest req, HttpServletResponse res);
+
+//-------------------------- [ 게시판 ] --------------------------------	
+
+	// 게시판 조회
+	void selectBoardListAction(HttpServletRequest req, HttpServletResponse res);
 	
-//-------------------------- [ 문의사항 ] --------------------------------	
+	// 게시판 상세조회
+	void selectBoardDetailAction(HttpServletRequest req, HttpServletResponse res);
 	
-	// 문의사항 조회
-	void selectAskListAction(HttpServletRequest req, HttpServletResponse res);
+	// 게시판 등록
+	void insertBoardAction(HttpServletRequest req, HttpServletResponse res);
 	
-	// 문의사항 상세조회
-	void selectAskDetailAction(HttpServletRequest req, HttpServletResponse res);
+	// 게시판 수정
+	void updateBoardAction(HttpServletRequest req, HttpServletResponse res);
 	
-	// 문의사항 등록
-	void insertAskAction(HttpServletRequest req, HttpServletResponse res);
-	
-	// 문의사항 수정
-	void updateAskAction(HttpServletRequest req, HttpServletResponse res);
-	
-	// 문의사항 삭제
-	void deleteAskAction(HttpServletRequest req, HttpServletResponse res);
+	// 게시판 삭제
+	void deleteBoardAction(HttpServletRequest req, HttpServletResponse res);
 	
 //-------------------------- [ 주문 ] --------------------------------	
 	

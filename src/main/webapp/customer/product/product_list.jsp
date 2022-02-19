@@ -14,7 +14,7 @@
 	<%@ include file="../../common/header.jsp" %>
 <div id="container">
 		<div id="section1">
-			<h1> 전체 </h1>
+			<h1> ${ko_category} </h1>
 		</div>	
 		<div id="section2">
 			<div class="search">
@@ -22,9 +22,14 @@
 				<a href="#"><img src="${path}/resources/images/upload/search.png" alt="검색" onclick="location.href='product_search_action.html'"></a>
 			</div>
 			<div class="product">
+				<c:if test="${plist.isEmpty()}">
+					<div class="discription">
+						<h2>현재 상품이 존재하지 않습니다.</h2>
+					</div>
+				</c:if>
 				<c:forEach var="p_dto" items="${plist}">
 					<ul>
-						<li><a href="${path}/product_detail.do"><img src="${path}/resources/images/product/${p_dto.value.product_img_name}" alt="상품 이미지"></a></li>
+						<li><a href="${path}/product_detail.do?product_no=${p_dto.value.product_no}"><img src="${path}/resources/images/product/${p_dto.value.product_img_name}" alt="상품 이미지"></a></li>
 						<li>${p_dto.value.product_name} </li>
 						<li>${p_dto.value.product_price} 원</li>
 						<li>리뷰 0</li>

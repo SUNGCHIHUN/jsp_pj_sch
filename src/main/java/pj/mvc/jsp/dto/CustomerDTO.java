@@ -3,7 +3,6 @@ package pj.mvc.jsp.dto;
 import java.sql.Date;
 
 public class CustomerDTO {
-	private String customer_no; // 고객 번호
 	private String customer_id; // 고객 아이디
 	private String customer_password; // 고객 비밀번호
 	private String customer_name; // 고객 이름
@@ -14,13 +13,7 @@ public class CustomerDTO {
 	private Date customer_regist_day; // 고객 가입일
 
 	public CustomerDTO() {}
-	
-	public String getCustomer_no() {
-		return customer_no;
-	}
-	public void setCustomer_no(String customer_no) {
-		this.customer_no = customer_no;
-	}
+
 	public String getCustomer_id() {
 		return customer_id;
 	}
@@ -72,7 +65,7 @@ public class CustomerDTO {
 
 	@Override
 	public String toString() {
-		return "CustomerDTO [customer_no=" + customer_no + ", customer_id=" + customer_id + ", customer_password="
+		return "CustomerDTO [customer_id=" + customer_id + ", customer_password="
 				+ customer_password + ", customer_name=" + customer_name + ", customer_email=" + customer_email
 				+ ", customer_tel=" + customer_tel + ", zipcode=" + zipcode + ", customer_address=" + customer_address
 				+ ", customer_regist_day=" + customer_regist_day + "]";

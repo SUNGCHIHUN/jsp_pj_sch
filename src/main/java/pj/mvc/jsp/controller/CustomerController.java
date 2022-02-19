@@ -150,6 +150,8 @@ public class CustomerController extends HttpServlet {
 		} else if (url.equals("/product_detail.do")) {
 			System.out.println("[/product_detail.do] 진입");
 
+			service.selectProductDetailAction(req, res);
+			
 			viewPage = "customer/product/product_detail.jsp";
 
 		// 장바구니 담기 처리
@@ -164,24 +166,82 @@ public class CustomerController extends HttpServlet {
 
 			viewPage = "customer/pay/pay.jsp";
 
+		// 리뷰등록 처리
+		} else if (url.equals("/review_add_action.do")) {
+			System.out.println("[/review_add_action.do] 진입");
+
+			service.insertReviewAction(req, res);
+
+			viewPage = "customer/review/review_add_action.jsp";
+			
+		// 리뷰삭제 처리
+		} else if (url.equals("/review_delete_action.do")) {
+			System.out.println("[/review_delete_action.do] 진입");
+
+			service.deleteReviewAction(req, res);
+
+			viewPage = "customer/review/review_delete_action.jsp";
+
 		// 결제하기 처리
 		} else if (url.equals("/pay_action.do")) {
 			System.out.println("[/pay_action.do] 진입");
 
 			viewPage = "customer/pay/pay_action.jsp";
 
-		// 공지사항 페이지 이동
-		} else if (url.equals("/notice_list.do")) {
-			System.out.println("[/notice_list.do] 진입");
+		// 게시판 조회
+		} else if (url.equals("/board_list.do")) {
+			System.out.println("[/board_list.do] 진입");
+			
+			service.selectBoardListAction(req, res);
 
-			viewPage = "customer/notice/notice_list.jsp";
+			viewPage = "customer/board/board_list.jsp";
 		
-		// 문의사항 페이지 이동
-		} else if (url.equals("/ask_list.do")) {
-			System.out.println("[/ask_list.do] 진입");
+		// 게시판 상세 페이지 이동
+		} else if (url.equals("/board_detail.do")) {
+			System.out.println("[/board_detail.do] 진입");
 
-			viewPage = "customer/ask/ask_list.jsp";
-
+			service.selectBoardDetailAction(req, res);
+			
+			viewPage = "customer/board/board_detail.jsp";
+		
+		// 게시글 등록 페이지 이동
+		} else if (url.equals("/board_add.do")) {
+			System.out.println("[/board_add.do] 진입");
+			
+			viewPage = "customer/board/board_add.jsp";
+		
+		// 게시글 등록
+		} else if (url.equals("/board_add_action.do")) {
+			System.out.println("[/board_add_action.do] 진입");
+			
+			service.insertBoardAction(req, res);
+			
+			viewPage = "customer/board/board_add_action.jsp";
+		
+		// 게시글 수정 페이지 이동
+		} else if (url.equals("/board_update.do")) {
+			System.out.println("[/board_update.do] 진입");
+			
+			service.selectBoardDetailAction(req, res);
+			
+			viewPage = "customer/board/board_update.jsp";
+		
+		// 게시글 수정 처리
+		} else if (url.equals("/board_update_action.do")) {
+			System.out.println("[/board_update_action.do] 진입");
+			
+			service.updateBoardAction(req, res);
+			
+			viewPage = "customer/board/board_update_action.jsp";
+		
+		// 게시글 삭제 처리
+		} else if (url.equals("/board_delete_action.do")) {
+			System.out.println("[/board_delete_action.do] 진입");
+			
+			service.deleteBoardAction(req, res);
+			
+			viewPage = "customer/board/board_delete_action.jsp";
+		
 		// 주문목록 페이지 이동
 		} else if (url.equals("/order_list.do")) {
 			System.out.println("[/order_list.do] 진입");
@@ -202,10 +262,12 @@ public class CustomerController extends HttpServlet {
 
 		}
 		
-		System.out.println("-------------------------------");
-		System.out.println("| 현재 sessionId  : " + req.getSession().getAttribute("sessionId") + " |");
-		System.out.println("| 현재 authResult : " + req.getSession().getAttribute("authResult") + " |");
-		System.out.println("-------------------------------");
+		System.out.println("------------ [세션정보] ------------");
+		System.out.println("| 현재 loginResult  : " + req.getSession().getAttribute("loginResult") + " |");
+		System.out.println("| 현재 sessionId    : " + req.getSession().getAttribute("sessionId") + " |");
+		System.out.println("| 현재 sessionName  : " + req.getSession().getAttribute("sessionName") + " |");
+		System.out.println("| 현재 authResult   : " + req.getSession().getAttribute("authResult") + " |");
+		System.out.println("----------------------------------");
 		
 		// jsp 화면으로 이동
 		RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);

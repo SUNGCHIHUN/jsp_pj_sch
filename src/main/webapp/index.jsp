@@ -11,7 +11,7 @@
 	<h2>메인 페이지 로딩중..</h2>
 	<script type="text/javascript">
 		window.setTimeout(function() {
-			location.href = "http://localhost:8081/${path}/main.do";
+			location.href = "http://localhost:8081${path}/main.do";
 		}, 500)
 	</script>	
 

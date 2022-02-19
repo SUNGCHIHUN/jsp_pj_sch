@@ -84,8 +84,8 @@ public class CustomerDAOImpl implements CustomerDAO {
 		try {
 			conn = dataSource.getConnection();
 			
-			String sql = "INSERT INTO Customers(customer_no, customer_id, customer_password, customer_name, zipcode, customer_address, customer_tel, customer_email, customer_regist_day)" + 
-						 " VALUES(customers_seq.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, sysdate)";
+			String sql = "INSERT INTO Customers(customer_id, customer_password, customer_name, zipcode, customer_address, customer_tel, customer_email, customer_regist_day)" + 
+						 " VALUES(?, ?, ?, ?, ?, ?, ?, sysdate)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getCustomer_id());
 			pstmt.setString(2, dto.getCustomer_password());

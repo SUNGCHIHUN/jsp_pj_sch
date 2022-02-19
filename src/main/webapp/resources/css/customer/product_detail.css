@@ -13,6 +13,11 @@ table {
 	padding: 10px 0;
 }
 
+.inputAmount {
+	width: 100px;
+	height: 40px;
+	font-size: 25px;
+}
 
 .cartBtn {
 	width: 150px;
@@ -53,7 +58,16 @@ textarea {
 	padding: 5px;
 }
 
+.registerBtn {
+	height: 50px;
+	border-radius: 10px;	
+	background-color: #2F4F4F;
+	color: white;
+	font-size: 20px;	
+}
+
 .reviewBtn {
+	display: inline;
 	width:150px;
 	height:50px;
 	background-color: black;

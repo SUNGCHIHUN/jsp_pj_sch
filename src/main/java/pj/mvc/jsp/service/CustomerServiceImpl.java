@@ -5,12 +5,16 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import pj.mvc.jsp.dao.BoardDAO;
+import pj.mvc.jsp.dao.BoardDAOImpl;
 import pj.mvc.jsp.dao.CustomerDAO;
 import pj.mvc.jsp.dao.CustomerDAOImpl;
 import pj.mvc.jsp.dao.ProductDAO;
 import pj.mvc.jsp.dao.ProductDAOImpl;
+import pj.mvc.jsp.dto.BoardDTO;
 import pj.mvc.jsp.dto.CustomerDTO;
 import pj.mvc.jsp.dto.ProductDTO;
+import pj.mvc.jsp.dto.ReviewDTO;
 
 public class CustomerServiceImpl implements CustomerService {
 	CustomerDAO dao;
@@ -32,7 +36,11 @@ public class CustomerServiceImpl implements CustomerService {
 		// 로그인 고객 아이디 세션
 		if (req.getSession().getAttribute("sessionId") == null)
 			req.getSession().setAttribute("sessionId", "");
-		
+
+		// 로그인 고객 이름 세션
+		if (req.getSession().getAttribute("sessionName") == null)
+			req.getSession().setAttribute("sessionName", "");
+
 		// 회원정보 조회 인증여부 세션
 		if (req.getSession().getAttribute("authResult") == null)
 			req.getSession().setAttribute("authResult", 0);
@@ -54,14 +62,19 @@ public class CustomerServiceImpl implements CustomerService {
 		// DB에서 로그인 정보 확인
 		loginResult = dao.idPasswordCheck(strId, strPassword);
 		
+		String strName = (dao.selectCustomer(strId)).getCustomer_name();
+		
 		// 로그인 여부에 따라 세션 아이디 설정
-		if (loginResult == 1) req.getSession().setAttribute("sessionId", strId);
+		if (loginResult == 1) {
+			req.getSession().setAttribute("sessionId", strId);
+			req.getSession().setAttribute("sessionName", strName);
+		}
 		
 		// 회원수정을 위한 인증여부 세션 설정
 		req.getSession().setAttribute("authResult", 0);
 		
 		// 로그인 성공 여부 설정
-		req.setAttribute("loginResult", loginResult);
+		req.getSession().setAttribute("loginResult", loginResult);
 	}
 	
 	@Override
@@ -224,17 +237,55 @@ public class CustomerServiceImpl implements CustomerService {
 	public void selectProductListAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("selectProductListAction() 서비스 실행");
 		
-		// 1. DAO를 생성하여 DB에서 상품조회
-		ProductDAO dao = ProductDAOImpl.getInstance();
-		Map<String, ProductDTO> plist = dao.selectProduct();
+		// 1. 카테고리를 받아온다.
+		String category = req.getParameter("product_category");
 		
-		// 2. 조회된 상품정보를 request객체에 저장
+		// 2. DAO와 결과를 담을 바구니 생성
+		ProductDAO dao = ProductDAOImpl.getInstance();
+		Map<String, ProductDTO> plist;
+		
+		// 카테고리가 없으면
+		if (category == null) {
+			// DB에서 전체 조회
+			plist = dao.selectProduct();
+			category = "all";
+		// 카테고리가 있으면
+		} else {
+			// 해당 카테고리로 DB에서 조회
+			plist = dao.selectProductCategory(category);
+		}
+		
+		// 3. 조회된 상품정보를 request객체에 저장
 		req.setAttribute("plist", plist);
+		
+		// 카테고리 한글로 변환
+		String ko_category = "";
+		if (category.equals("all")) ko_category="전체";
+		else if(category.equals("energy")) ko_category = "드링크";
+		else if(category.equals("carbon")) ko_category = "탄산음료";
+		else if(category.equals("water")) ko_category = "생수";
+		else if(category.equals("coffee")) ko_category = "커피";
+		
+		req.setAttribute("ko_category", ko_category);
 	}
 
 	@Override // 상품 상세조회
 	public void selectProductDetailAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("selectProductDetailAction() 서비스 실행");
+		
+		// 1. 선택한 상품번호를 받아온다.
+		String product_no = req.getParameter("product_no");
+		
+		// 2. 해당 상품의 상세 내역을 받아온다.
+		ProductDAO dao = ProductDAOImpl.getInstance();
+		ProductDTO dto = dao.selectProductDetail(product_no);
+		
+		// 3. 해당 상품의 리뷰를 받아온다.
+		Map<String, ReviewDTO> rlist = dao.selectReview(product_no);
+		
+		// 3. 조회된 상품 상세정보, 리뷰를 request에 저장
+		req.setAttribute("p_dto", dto);
+		req.setAttribute("rlist", rlist);
 		
 	}
 
@@ -244,38 +295,47 @@ public class CustomerServiceImpl implements CustomerService {
 		
 	}
 
-//-------------------------------------- [ 공지사항 ] --------------------------------------------	
-
-	@Override // 공지사항 조회
-	public void selectNoticeListAction(HttpServletRequest req, HttpServletResponse res) {
-		System.out.println("selectNoticeListAction() 서비스 실행");
-
-	}
-
-	@Override // 공지사항 상세조회
-	public void selectNoticeDetailAction(HttpServletRequest req, HttpServletResponse res) {
-		System.out.println("selectNoticeDetailAction() 서비스 실행");
-		
-	}
-			
 //-------------------------------------- [ 상품리뷰 ] --------------------------------------------	
-
-	@Override // 상품리뷰 조회
-	public void selectProductReviewListAction(HttpServletRequest req, HttpServletResponse res) {
-		System.out.println("selectProductReviewListAction() 서비스 실행");
-		
-	}
 
 	@Override // 상품리뷰 등록
 	public void insertReviewAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("insertReviewAction() 서비스 실행");
 		
+		// 1. 고객이 입력한 리뷰 내용과 정보들을 받아온다.
+		ReviewDTO dto = new ReviewDTO();
+		dto.setCustomer_id((String)req.getSession().getAttribute("sessionId"));
+		dto.setReview_writer((String)req.getSession().getAttribute("sessionName"));
+		dto.setReview_contents(req.getParameter("review"));
+		dto.setProduct_no(req.getParameter("product_no"));
+		dto.setReview_star(Integer.parseInt(req.getParameter("star")));
+		
+		// 2. DAO를 생성하여 DB에서 해당 리뷰번호의 리뷰를 등록한다.
+		ProductDAO dao = ProductDAOImpl.getInstance();
+		int insertResult = dao.insertReview(dto);
+		
+		// 3. 결과를 request 객체에 저장한다.
+		req.setAttribute("insertResult", insertResult);
+		
+		// 4. 해당 상품 상세로 돌아가기 위한 상품번호  request 객체에 저장
+		req.setAttribute("product_no", req.getParameter("product_no"));
 	}
 
 	@Override // 상품리뷰 삭제
 	public void deleteReviewAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("deleteReviewAction() 서비스 실행");
 		
+		// 1. 리뷰 번호와 해당 리뷰가 있는 상품의 번호를 받아온다.
+		String review_no = req.getParameter("review_no");
+		String product_no = req.getParameter("product_no");
+		System.out.println("product_no : " + product_no);
+		
+		// 2. DAO를 생성하고 DB에서 해당 리뷰번호에 대한 삭제를 처리한다.
+		ProductDAO dao = ProductDAOImpl.getInstance();
+		int deleteResult = dao.deleteReview(review_no);
+		
+		// 3. 리뷰삭제 결과와 리뷰가 있던 상품 번호를 request 객체에 저장한다.
+		req.setAttribute("deleteResult", deleteResult);
+		req.setAttribute("product_no", product_no);
 	}
 	
 //-------------------------------------- [ 장바구니 ] --------------------------------------------	
@@ -304,35 +364,107 @@ public class CustomerServiceImpl implements CustomerService {
 		
 	}
 	
-//-------------------------------------- [ 문의사항 ] --------------------------------------------	
+//-------------------------------------- [ 게시판 ] --------------------------------------------	
 
-	@Override // 문의사항 조회
-	public void selectAskListAction(HttpServletRequest req, HttpServletResponse res) {
-		System.out.println("selectAskListAction() 서비스 실행");
+	@Override // 게시판 조회
+	public void selectBoardListAction(HttpServletRequest req, HttpServletResponse res) {
+		System.out.println("selectBoardListAction() 서비스 실행");
+		
+		// 1. 게시판의 카테고리를 받아온다.
+		String category = req.getParameter("board_category");
+		
+		// 2. DAO를 생성하여 DB에서 카테고리와 일치하는 게시판을 조회한다.
+		BoardDAO dao = BoardDAOImpl.getInstance();
+		Map<String, BoardDTO> blist = dao.selectBoardList(category);
+
+		// 3. 조회 결과 게시판 목록들을 request객체에 저장한다.
+		req.setAttribute("blist", blist);
+		
+		// 카테고리
+		req.setAttribute("board_category", category);
+		
+		// 카테고리 한글로 변환
+		String ko_category = "";
+		if (category.equals("notice")) ko_category="공지사항";
+		else if(category.equals("ask")) ko_category = "문의사항";
+		req.setAttribute("ko_category", ko_category);
+	}
+
+	@Override // 게시판 상세조회
+	public void selectBoardDetailAction(HttpServletRequest req, HttpServletResponse res) {
+		System.out.println("selectBoardDetailAction() 서비스 실행");
+		
+		// 1. 게시글 번호를 받아온다.
+		String board_no = req.getParameter("board_no");
+		
+		// 2. DAO 생성하여 DB에서 게시글을 조회하고, 결과를 받아온다.
+		BoardDAO dao = BoardDAOImpl.getInstance();
+		BoardDTO dto = dao.selectBoardDetail(board_no);
+		
+		// 3. 결과를 request 객체에 저장하여 돌려준다.
+		req.setAttribute("board", dto);
 		
 	}
 
-	@Override // 문의사항 상세조회
-	public void selectAskDetailAction(HttpServletRequest req, HttpServletResponse res) {
-		System.out.println("selectAskDetailAction() 서비스 실행");
+	@Override // 게시판 등록
+	public void insertBoardAction(HttpServletRequest req, HttpServletResponse res) {
+		System.out.println("insertBoardAction() 서비스 실행");
+		
+		// 1. 카테고리와 게시글 내용들을 받아와 dto에 저장합니다.
+		String category = req.getParameter("board_category");
+
+		BoardDTO dto = new BoardDTO();
+		dto.setBoard_category(category);
+		dto.setBoard_title(req.getParameter("title"));
+		dto.setCustomer_id((String)req.getSession().getAttribute("sessionId"));
+		dto.setBoard_writer((String)req.getSession().getAttribute("sessionName"));
+		dto.setBoard_contents(req.getParameter("contents"));
+		
+		if (category.equals("ask")) {
+			dto.setBoard_state("답변대기");
+		}
+		
+		// 2. DAO를 생성하여 받아온 내용을 DB에 등록합니다.
+		BoardDAO dao = BoardDAOImpl.getInstance();
+		int insertResult = dao.insertBoard(dto);
+		
+		// 3. 결과를 받아 request 객체에 저장합니다.
+		req.setAttribute("insertResult", insertResult);
+	}
+
+	@Override // 게시판 수정
+	public void updateBoardAction(HttpServletRequest req, HttpServletResponse res) {
+		System.out.println("updateBoardAction() 서비스 실행");
+		
+		// 1. 게시글 번호와 수정 내용을 받아옵니다.
+		String board_no = req.getParameter("board_no");
+		BoardDTO dto = new BoardDTO();
+		dto.setBoard_no(board_no);
+		dto.setBoard_title(req.getParameter("title"));
+		dto.setBoard_contents(req.getParameter("contents"));
+		
+		// 2. DAO를 생성하고, 받아온 내용을 DB에서 수정합니다.
+		BoardDAO dao = BoardDAOImpl.getInstance();
+		int updateResult = dao.updateBoard(dto);
+		
+		// 3. 결과를 request 객체에 저장
+		req.setAttribute("updateResult", updateResult);
 		
 	}
 
-	@Override // 문의사항 등록
-	public void insertAskAction(HttpServletRequest req, HttpServletResponse res) {
-		System.out.println("insertAskAction() 서비스 실행");
+	@Override // 게시판 삭제
+	public void deleteBoardAction(HttpServletRequest req, HttpServletResponse res) {
+		System.out.println("deleteBoardAction() 서비스 실행");
 		
-	}
-
-	@Override // 문의사항 수정
-	public void updateAskAction(HttpServletRequest req, HttpServletResponse res) {
-		System.out.println("updateAskAction() 서비스 실행");
+		// 1. 게시글 번호를 받아옵니다.
+		String board_no = req.getParameter("board_no");
 		
-	}
-
-	@Override // 문의사항 삭제
-	public void deleteAskAction(HttpServletRequest req, HttpServletResponse res) {
-		System.out.println("deleteAskAction() 서비스 실행");
+		// 2. DAO를 생성하고, 해당 번호의 게시글을 DB에서 삭제합니다.
+		BoardDAO dao = BoardDAOImpl.getInstance();
+		int deleteResult = dao.deleteBoard(board_no);
+		
+		// 3. 결과를 request 객체에 저장합니다.
+		req.setAttribute("deleteResult", deleteResult);
 		
 	}
 	

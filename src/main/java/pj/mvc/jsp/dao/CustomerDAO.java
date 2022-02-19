@@ -21,4 +21,5 @@ public interface CustomerDAO {
 	
 	// 아이디, 비밀번호 체크
 	int idPasswordCheck(String strId, String strPassword);
+
 }
