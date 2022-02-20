@@ -158,12 +158,20 @@ public class CustomerController extends HttpServlet {
 		} else if (url.equals("/cart_add_action.do")) {
 			System.out.println("[/cart_add_action.do] 진입");
 
+			service.insertCartAction(req, res);
+			
 			viewPage = "customer/cart/cart_add_action.jsp";
 
 		// 구매하기 페이지 이동
 		} else if (url.equals("/pay.do")) {
 			System.out.println("[/pay.do] 진입");
+			
+			viewPage = "customer/pay/pay.jsp";
 
+		// 결제하기 처리
+		} else if (url.equals("/pay_action.do")) {
+			System.out.println("[/pay_action.do] 진입");
+			
 			viewPage = "customer/pay/pay.jsp";
 
 		// 리뷰등록 처리
@@ -210,7 +218,7 @@ public class CustomerController extends HttpServlet {
 			
 			viewPage = "customer/board/board_add.jsp";
 		
-		// 게시글 등록
+		// 게시글 등록 처리
 		} else if (url.equals("/board_add_action.do")) {
 			System.out.println("[/board_add_action.do] 진입");
 			

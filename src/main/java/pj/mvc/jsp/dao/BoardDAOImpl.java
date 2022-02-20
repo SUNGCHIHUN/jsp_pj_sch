@@ -179,12 +179,6 @@ public class BoardDAOImpl implements BoardDAO {
 	}
 
 	@Override
-	public int insertSimpleBoard(String board_category, BoardDTO dto) {
-		System.out.println("insertSimpleBoard() - dao");
-		return 0;
-	}
-
-	@Override
 	public int updateBoard(BoardDTO dto) {
 		System.out.println("updateBoard() - dao");
 

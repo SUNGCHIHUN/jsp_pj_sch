@@ -14,9 +14,6 @@ public interface BoardDAO {
 
 	// 게시글 등록
 	int insertBoard(BoardDTO dto);
-	
-	// 게시판 간편등록
-	int insertSimpleBoard(String board_category, BoardDTO dto);
 
 	// 게시판 수정
 	int updateBoard(BoardDTO dto);

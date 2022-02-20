@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="../../common/setting.jsp" %>
+<%@ include file="/common/setting.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,7 +14,7 @@
 </head>
 <body>
 	<div id="top"></div>
-	<%@ include file="../../common/header.jsp" %>
+	<%@ include file="/common/header.jsp" %>
 	<div id="container">
 		<div id="section1">
 			<h1> 드링크 </h1>
@@ -22,6 +22,7 @@
 		
 		<div id="section2">
 			<div class="product_detail">
+				<form action="${path}/pay.do?product_no=${p_dto.product_no}" method="post">
 				<table>
 					<tr>
 						<td>
@@ -39,20 +40,21 @@
 									${p_dto.product_price}원
 								</li>
 								<li><hr></li>
-								<li><b>배송안내</b></li>
+								<li><b>배송안내</b> <span style="color: gray;"> [배송비 : <input type="text" value="3000" class="inputDeliveryPrice" name="delivery_price" readonly> 원]</span></li>
 								<li>1월 25일(화) 도착 예정</li>
 								<li><hr></li>
 								<li>
-									수량선택 <input type="number" class="inputAmount" value="1"> 개
+									수량선택 <input type="number" class="inputAmount" name="amount" value="1"> 개
 								</li>
 								<li style="text-align:center;">
-									<input type="button" class="cartBtn" value="장바구니 담기" onclick="addCart()">
-									<input type="button" class="buyBtn" value="구매하기" onclick="pay()">
+									<input type="button" class="cartBtn" value="장바구니 담기" onclick="window.location='${path}/cart_add_action.do?product_no=${p_dto.product_no}&amount='">
+									<input type="submit" class="buyBtn" value="구매하기">
 								</li>
 							</ul>
 						</td>
 					</tr>
 				</table>
+				</form>
 			</div>
 
 			<div class="review">
@@ -177,6 +179,6 @@
 		</div>
 	</div>
 
-	<%@ include file="../../common/footer.jsp" %>
+	<%@ include file="/common/footer.jsp" %>
 </body>
 </html>

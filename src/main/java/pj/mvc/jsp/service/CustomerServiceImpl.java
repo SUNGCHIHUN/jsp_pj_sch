@@ -11,6 +11,8 @@ import pj.mvc.jsp.dao.CustomerDAO;
 import pj.mvc.jsp.dao.CustomerDAOImpl;
 import pj.mvc.jsp.dao.ProductDAO;
 import pj.mvc.jsp.dao.ProductDAOImpl;
+import pj.mvc.jsp.dao.ReviewDAO;
+import pj.mvc.jsp.dao.ReviewDAOImpl;
 import pj.mvc.jsp.dto.BoardDTO;
 import pj.mvc.jsp.dto.CustomerDTO;
 import pj.mvc.jsp.dto.ProductDTO;
@@ -277,18 +279,19 @@ public class CustomerServiceImpl implements CustomerService {
 		String product_no = req.getParameter("product_no");
 		
 		// 2. 해당 상품의 상세 내역을 받아온다.
-		ProductDAO dao = ProductDAOImpl.getInstance();
-		ProductDTO dto = dao.selectProductDetail(product_no);
+		ProductDAO pdao = ProductDAOImpl.getInstance();
+		ProductDTO dto = pdao.selectProductDetail(product_no);
 		
 		// 3. 해당 상품의 리뷰를 받아온다.
-		Map<String, ReviewDTO> rlist = dao.selectReview(product_no);
+		ReviewDAO rdao = ReviewDAOImpl.getInstance();
+		Map<String, ReviewDTO> rlist = rdao.selectReview(product_no);
 		
 		// 3. 조회된 상품 상세정보, 리뷰를 request에 저장
 		req.setAttribute("p_dto", dto);
 		req.setAttribute("rlist", rlist);
 		
 	}
-
+	
 	@Override // 상품 구매하기
 	public void buyProductAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("buyProductAction() 서비스 실행");
@@ -310,7 +313,7 @@ public class CustomerServiceImpl implements CustomerService {
 		dto.setReview_star(Integer.parseInt(req.getParameter("star")));
 		
 		// 2. DAO를 생성하여 DB에서 해당 리뷰번호의 리뷰를 등록한다.
-		ProductDAO dao = ProductDAOImpl.getInstance();
+		ReviewDAO dao = ReviewDAOImpl.getInstance();
 		int insertResult = dao.insertReview(dto);
 		
 		// 3. 결과를 request 객체에 저장한다.
@@ -330,7 +333,7 @@ public class CustomerServiceImpl implements CustomerService {
 		System.out.println("product_no : " + product_no);
 		
 		// 2. DAO를 생성하고 DB에서 해당 리뷰번호에 대한 삭제를 처리한다.
-		ProductDAO dao = ProductDAOImpl.getInstance();
+		ReviewDAO dao = ReviewDAOImpl.getInstance();
 		int deleteResult = dao.deleteReview(review_no);
 		
 		// 3. 리뷰삭제 결과와 리뷰가 있던 상품 번호를 request 객체에 저장한다.
@@ -349,7 +352,7 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override // 장바구니 조회
 	public void selectCartListAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("selectCartListAction() 서비스 실행");
-		
+
 	}
 
 	@Override // 장바구니 개별 삭제

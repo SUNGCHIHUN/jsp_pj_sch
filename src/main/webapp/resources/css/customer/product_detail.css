@@ -14,9 +14,19 @@ table {
 }
 
 .inputAmount {
-	width: 100px;
+	width: 80px;
 	height: 40px;
 	font-size: 25px;
+	border-radius: 5px;
+	text-align:right; 
+}
+
+.inputDeliveryPrice {
+	width:40px; 
+	border:none; 
+	text-align:right; 
+	font-size:15px; 
+	color:gray;
 }
 
 .cartBtn {

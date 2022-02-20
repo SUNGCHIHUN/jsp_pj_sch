@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="../../common/setting.jsp" %>
+<%@ include file="/common/setting.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,7 +10,7 @@
 <link href="${path}/resources/css/customer/cart.css" rel="stylesheet">
 </head>
 <body>
-	<%@ include file="../../common/header.jsp" %>
+	<%@ include file="/common/header.jsp" %>
 	<div id="container">
 		<div id="section1">
 			<h1 style="padding: 20px 0;"> 장바구니에 들어 있는 제품입니다.</h1>
@@ -88,6 +88,6 @@
 			</div>
 		</div>
 	</div>
-	<%@ include file="../../common/footer.jsp" %>
+	<%@ include file="/common/footer.jsp" %>
 </body>
 </html>
