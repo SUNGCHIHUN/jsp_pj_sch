@@ -10,7 +10,17 @@
 <link href="${path}/resources/css/common/page.css" rel="stylesheet">
 <link href="${path}/resources/css/customer/product_detail.css" rel="stylesheet">
 
-<script src="${path}/resources/js/customer/product_detail.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+	
+	$(function() {
+		$("#cartAddBtn").click(function() {
+			document.product_detail.action= "${path}/cart_add_action.do";
+			document.product_detail.submit();
+		});
+	});
+	
+</script>
 </head>
 <body>
 	<div id="top"></div>
@@ -22,38 +32,39 @@
 		
 		<div id="section2">
 			<div class="product_detail">
-				<form action="${path}/pay.do?product_no=${p_dto.product_no}" method="post">
-				<table>
-					<tr>
-						<td>
-							<img src="${path}/resources/images/product/${p_dto.product_img_name}" alt="상품 이미지">
-						</td>
-						<td>
-							<ul>
-								<li style="font-size:30px; font-weight:bold; color:blue;">치모</li>
-								<li style="font-size:30px; font-weight:bold;">${p_dto.product_name}</li>
-								<li style="padding:10px 0;">
-									★ 5.0 <a href="#reivew"><b style="font-size: 25px;">${rlist.size()}</b></a>개의 리뷰
-								</li>
-								<li><hr></li>
-								<li style="font-size:20px; font-weight:bold;">
-									${p_dto.product_price}원
-								</li>
-								<li><hr></li>
-								<li><b>배송안내</b> <span style="color: gray;"> [배송비 : <input type="text" value="3000" class="inputDeliveryPrice" name="delivery_price" readonly> 원]</span></li>
-								<li>1월 25일(화) 도착 예정</li>
-								<li><hr></li>
-								<li>
-									수량선택 <input type="number" class="inputAmount" name="amount" value="1"> 개
-								</li>
-								<li style="text-align:center;">
-									<input type="button" class="cartBtn" value="장바구니 담기" onclick="window.location='${path}/cart_add_action.do?product_no=${p_dto.product_no}&amount='">
-									<input type="submit" class="buyBtn" value="구매하기">
-								</li>
-							</ul>
-						</td>
-					</tr>
-				</table>
+				<form action="${path}/pay.do?" method="post" name="product_detail">
+					<input type="hidden" name="product_no" value="${p_dto.product_no}">
+					<table>
+						<tr>
+							<td>
+								<img src="${path}/resources/images/product/${p_dto.product_img_name}" alt="상품 이미지">
+							</td>
+							<td>
+								<ul>
+									<li style="font-size:30px; font-weight:bold; color:blue;">치모</li>
+									<li style="font-size:30px; font-weight:bold;">${p_dto.product_name}</li>
+									<li style="padding:10px 0;">
+										★ 5.0 <a href="#reivew"><b style="font-size: 25px;">${rlist.size()}</b></a>개의 리뷰
+									</li>
+									<li><hr></li>
+									<li style="font-size:20px; font-weight:bold;">
+										${p_dto.product_price}원
+									</li>
+									<li><hr></li>
+									<li><b>배송안내</b> <span style="color: gray;"> [배송비 : <input type="text" value="3000" class="inputDeliveryPrice" name="delivery_price" readonly> 원]</span></li>
+									<li>1월 25일(화) 도착 예정</li>
+									<li><hr></li>
+									<li>
+										수량선택 <input type="number" class="inputAmount" name="amount" min="1" max="9999" 	value="1"> 개
+									</li>
+									<li style="text-align:center;">
+										<input type="button" id="cartAddBtn" class="cartBtn" value="장바구니 담기">
+										<input type="submit" class="buyBtn" value="구매하기">
+									</li>
+								</ul>
+							</td>
+						</tr>
+					</table>
 				</form>
 			</div>
 
@@ -122,7 +133,8 @@
 					
 					<tr>
 						<td style="border-right: 1px dotted gray; width:80%;">
-							<form action="${path}/review_add_action.do?product_no=${param.product_no}" method="post">
+							<form action="${path}/review_add_action.do" method="post">
+								<input type="hidden" name="product_no" value="${p_dto.product_no}">
 								<ul>
 									<li>
 										<b>별점</b> &nbsp;

@@ -9,15 +9,15 @@
 </head>
 <body>
 	<%-- 장바구니 등록 성공 --%>
-	<c:if test="${insertResult == 1}">
+	<c:if test="${insertResult != 0 || updateResult != 0}">
 		<script>
 			alert("장바구니에 등록되었습니다.");
-			window.location="${path}/product_list.do?product_no=${product_no}";
+			window.location="${path}/product_detail.do?product_no=${product_no}";
 		</script>
 	</c:if>
 	
 	<%-- 장바구니 등록 실패 --%>
-	<c:if test="${insertResult == 1}">
+	<c:if test="${insertResult == 0 || updateResult == 0}">
 		<script>
 			alert("장바구니에 등록을 하지 못했습니다.");
 			window.history.go(-1);

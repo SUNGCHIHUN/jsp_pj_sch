@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="../../common/setting.jsp" %>
+<%@ include file="/common/setting.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,7 +9,7 @@
 <link href="${path}/resources/css/common/login.css" rel="stylesheet">
 </head>
 <body>
-	<%@ include file="../../common/header.jsp" %>
+	<%@ include file="/common/header.jsp" %>
 	<div id="container">
 		<div id="section">
 			<div class="login">
@@ -24,6 +24,7 @@
 							<c:choose>
 								<c:when test="${loginResult == 0}">존재하지 않는 회원입니다.</c:when>
 								<c:when test="${loginResult == -1}">비밀번호가 일치하지 않습니다.</c:when>
+								<c:when test="${loginResult == 1}">회원가입을 축하합니다. 로그인해주세요!</c:when>
 								<c:when test="${loginResult == 2}">CIMO 스토어에 오신 것을 환영합니다!</c:when>
 								<c:otherwise></c:otherwise>
 							</c:choose>

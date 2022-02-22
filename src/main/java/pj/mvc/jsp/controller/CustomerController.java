@@ -59,7 +59,7 @@ public class CustomerController extends HttpServlet {
 		// 로그인 페이지 이동
 		} else if (url.equals("/login.do")) {
 			System.out.println("[/login.do] 진입");
-			
+
 			viewPage = "customer/login/login.jsp";
 			
 		// 로그인 처리
@@ -154,16 +154,8 @@ public class CustomerController extends HttpServlet {
 			
 			viewPage = "customer/product/product_detail.jsp";
 
-		// 장바구니 담기 처리
-		} else if (url.equals("/cart_add_action.do")) {
-			System.out.println("[/cart_add_action.do] 진입");
-
-			service.insertCartAction(req, res);
-			
-			viewPage = "customer/cart/cart_add_action.jsp";
-
 		// 구매하기 페이지 이동
-		} else if (url.equals("/pay.do")) {
+		}  else if (url.equals("/pay.do")) {
 			System.out.println("[/pay.do] 진입");
 			
 			viewPage = "customer/pay/pay.jsp";
@@ -260,13 +252,41 @@ public class CustomerController extends HttpServlet {
 		} else if (url.equals("/cart_list.do")) {
 			System.out.println("[/cart_list.do] 진입");
 
+			service.selectCartListAction(req, res);
+			
 			viewPage = "customer/cart/cart_list.jsp";
 
-		// 장바구니물품 구매하기 페이지 이동
-		}  else if (url.equals("/product_list.do")) {
-			System.out.println("[/product_list.do] 진입");
+		// 장바구니 상품등록 처리
+		} else if (url.equals("/cart_add_action.do")) {
+			System.out.println("[/cart_add_action.do] 진입");
 
-			viewPage = "customer/product/product_list.jsp";
+			service.insertCartItemAction(req, res);
+			
+			viewPage = "customer/cart/cart_add_action.jsp";
+			
+		// 장바구니 수정 처리
+		} else if (url.equals("/cart_update_action.do")) {
+			System.out.println("[/cart_update_action.do] 진입");
+
+			service.updateCartItemAction(req, res);
+			
+			viewPage = "customer/cart/cart_update_action.jsp";
+
+		// 장바구니 삭제 처리
+		} else if (url.equals("/cart_delete_action.do")) {
+			System.out.println("[/cart_delete_action.do] 진입");
+
+			service.deleteCartItemAction(req, res);
+			
+			viewPage = "customer/cart/cart_delete_action.jsp";
+
+		// 장바구니 비우기
+		} else if (url.equals("/cart_delete_all_action.do")) {
+			System.out.println("[/cart_delete_all_action.do] 진입");
+
+			service.deleteCartAllAction(req, res);
+			
+			viewPage = "customer/cart/cart_delete_all_action.jsp";
 
 		}
 		

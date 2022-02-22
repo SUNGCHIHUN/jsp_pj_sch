@@ -13,10 +13,13 @@ import pj.mvc.jsp.dao.ProductDAO;
 import pj.mvc.jsp.dao.ProductDAOImpl;
 import pj.mvc.jsp.dao.ReviewDAO;
 import pj.mvc.jsp.dao.ReviewDAOImpl;
+import pj.mvc.jsp.dao.ShelfDAO;
+import pj.mvc.jsp.dao.ShelfDAOImpl;
 import pj.mvc.jsp.dto.BoardDTO;
 import pj.mvc.jsp.dto.CustomerDTO;
 import pj.mvc.jsp.dto.ProductDTO;
 import pj.mvc.jsp.dto.ReviewDTO;
+import pj.mvc.jsp.dto.ShelfDTO;
 
 public class CustomerServiceImpl implements CustomerService {
 	CustomerDAO dao;
@@ -344,20 +347,105 @@ public class CustomerServiceImpl implements CustomerService {
 //-------------------------------------- [ 장바구니 ] --------------------------------------------	
 
 	@Override // 장바구니 등록
-	public void insertCartAction(HttpServletRequest req, HttpServletResponse res) {
+	public void insertCartItemAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("insertCartAction() 서비스 실행");
+		
+		// 1. 상품번호와 수량을 받아옵니다.
+		String customer_id = (String)req.getSession().getAttribute("sessionId");
+		String product_no = req.getParameter("product_no");
+		int amount = Integer.parseInt(req.getParameter("amount"));
+		
+		ShelfDTO dto = new ShelfDTO();
+		dto.setCustomer_id(customer_id);
+		dto.setProduct_no(product_no);
+		dto.setAmount(amount);
+		
+		// 2-1. DAO를 생성하여 장바구니에 동일한 상품이 있는지 확인합니다.
+		ShelfDAO dao = ShelfDAOImpl.getInstance();
+		ShelfDTO oldDTO = dao.selectCartItem(customer_id, product_no);
+		
+		int insertResult = 0;
+		int updateResult = 0;
+		// 2-2. 있으면 기존 장바구니 상품의 수량만 증가시킵니다.
+		if (oldDTO != null) {
+			updateResult = dao.updateCartItemAmount(oldDTO.getShelf_no(), amount);
+			req.setAttribute("updateResult", updateResult);
+		
+			// 2-2. 없는 경우, 장바구니 DB에 해당 정보를 새로 등록합니다.
+		} else {
+			
+			insertResult = dao.insertCartItem(dto);
+			req.setAttribute("insertResult", insertResult);
+		}
+		
+		// 3. request 객체에 결과를 저장합니다.
+		req.setAttribute("product_no", product_no);
 		
 	}
 
 	@Override // 장바구니 조회
 	public void selectCartListAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("selectCartListAction() 서비스 실행");
-
+		
+		// 1. 현재 고객 아이디를 받아옵니다.
+		String customer_id = (String)req.getSession().getAttribute("sessionId");
+		
+		// 2. DAO를 생성하여 해당 고객의 장바구니를 DB에서 조회합니다.
+		ShelfDAO dao = ShelfDAOImpl.getInstance();
+		Map<String, ShelfDTO> slist = dao.selectCartList(customer_id);
+		
+		// 3. request 객체에 결과를 저장합니다.
+		req.setAttribute("slist", slist);
+		
 	}
 
+	@Override // 장바구니 수정
+	public void updateCartItemAction(HttpServletRequest req, HttpServletResponse res) {
+		System.out.println("updateCartAction() 서비스 실행");
+		
+		// 1. 장바구니의 번호와 변경할 수량을 받아옵니다.
+		String shelf_no = req.getParameter("shelf_no");
+		int amount = Integer.parseInt(req.getParameter("amount"));
+		System.out.println("shelf_no : " + shelf_no);
+		System.out.println("amount : " + amount);
+		
+		// 2. DAO를 생성하여 해당 장바구니의 상품 수량을 DB에서 변경합니다.
+		int updateResult = 0;
+		ShelfDAO dao = ShelfDAOImpl.getInstance();
+		updateResult = dao.updateCartItemAmount(shelf_no, amount);
+		
+		// 3. request 객체에 결과를 저장합니다.
+		req.setAttribute("updateResult", updateResult);
+		
+	}
+	
 	@Override // 장바구니 개별 삭제
-	public void deleteCartAction(HttpServletRequest req, HttpServletResponse res) {
+	public void deleteCartItemAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("deleteCartAction() 서비스 실행");
+		
+		// 1. 장바구니의 번호들을 받아옵니다.
+		String[] snList = req.getParameterValues("shelf_no");
+
+		// 2. DAO를 생성하여 해당 장바구니를 DB에서 삭제합니다.
+		int deleteResult = 0;
+		ShelfDAO dao = ShelfDAOImpl.getInstance();
+		deleteResult = dao.deleteCartItem(snList);
+		
+		// 3. request 객체에 결과를 저장합니다.
+		req.setAttribute("deleteResult", deleteResult);
+	}
+	
+	@Override // 장바구니 비우기
+	public void deleteCartAllAction(HttpServletRequest req, HttpServletResponse res) {
+		System.out.println("deleteCartAllAction() 서비스 실행");
+		
+		// 1. DAO를 생성하여 장바구니를 DB에서 삭제합니다.
+		int deleteResult = 0;
+		ShelfDAO dao = ShelfDAOImpl.getInstance();
+		deleteResult = dao.deleteCartAll();
+		
+		// 2. request 객체에 결과를 저장합니다.
+		req.setAttribute("deleteResult", deleteResult);
 		
 	}
 
@@ -366,7 +454,7 @@ public class CustomerServiceImpl implements CustomerService {
 		System.out.println("buyCartProductAction() 서비스 실행");
 		
 	}
-	
+
 //-------------------------------------- [ 게시판 ] --------------------------------------------	
 
 	@Override // 게시판 조회
@@ -496,5 +584,4 @@ public class CustomerServiceImpl implements CustomerService {
 		System.out.println("refundAction() 서비스 실행");
 		
 	}
-
 }

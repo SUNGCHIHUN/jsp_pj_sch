@@ -9,12 +9,14 @@
 </head>
 <body>
 	<c:if test="${registerResult == 1}">
+		<%-- 세션에 registerResult 저장 --%>
+		<c:set var="loginResult" value="${registerResult}" scope="session"/>
 		<script>
 			alert("회원가입에 성공하였습니다.");
 			window.location="${path}/login.do";
 		</script>
 	</c:if>
-	
+
 	<c:if test="${registerResult != 1}">
 		<script>
 			alert("회원가입에 실패하였습니다.");

@@ -60,13 +60,19 @@ public interface CustomerService {
 //-------------------------- [ 장바구니 ] --------------------------------	
 
 	// 장바구니 담기
-	void insertCartAction(HttpServletRequest req, HttpServletResponse res);
+	void insertCartItemAction(HttpServletRequest req, HttpServletResponse res);
 	
 	// 장바구니 조회
 	void selectCartListAction(HttpServletRequest req, HttpServletResponse res);
 	
+	// 장바구니 상품수정
+	void updateCartItemAction(HttpServletRequest req, HttpServletResponse res);
+	
 	// 장바구니 상품삭제
-	void deleteCartAction(HttpServletRequest req, HttpServletResponse res);
+	void deleteCartItemAction(HttpServletRequest req, HttpServletResponse res);
+	
+	// 장바구니 비우기
+	void deleteCartAllAction(HttpServletRequest req, HttpServletResponse res);
 	
 	// 장바구니 상품구매
 	void buyCartProductAction(HttpServletRequest req, HttpServletResponse res);

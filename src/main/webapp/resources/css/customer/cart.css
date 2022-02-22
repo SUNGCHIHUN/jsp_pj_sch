@@ -29,12 +29,14 @@ table {
 }
 
 table th {
+	text-align: center;
 	border-top: 1px solid gray;
 	border-bottom: 1px solid gray;
 	padding: 10px 0;
 }
 
 table td {
+	text-align: center;
 	border-top: 1px solid gray;
 	border-bottom: 1px solid gray;
 	padding: 20px;
@@ -68,6 +70,12 @@ table td {
 	height: 50px;
 	font-size: 30px;
 	padding: 20px;
+}
+
+.inputAmount {
+	width: 70px;
+	height: 40px;
+	font-size: 20px;
 }
 
 .modifyBtn {
