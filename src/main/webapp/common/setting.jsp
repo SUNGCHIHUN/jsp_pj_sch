@@ -7,3 +7,6 @@
 
 <%-- 기본 프로젝트명으로 path 설정 --%>
 <c:set var="path" value="${pageContext.request.contextPath}" />
+
+<%-- JQuery --%>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

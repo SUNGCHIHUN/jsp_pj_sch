@@ -1,5 +1,7 @@
 package pj.mvc.jsp.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +11,8 @@ import pj.mvc.jsp.dao.BoardDAO;
 import pj.mvc.jsp.dao.BoardDAOImpl;
 import pj.mvc.jsp.dao.CustomerDAO;
 import pj.mvc.jsp.dao.CustomerDAOImpl;
+import pj.mvc.jsp.dao.OrderDAO;
+import pj.mvc.jsp.dao.OrderDAOImpl;
 import pj.mvc.jsp.dao.ProductDAO;
 import pj.mvc.jsp.dao.ProductDAOImpl;
 import pj.mvc.jsp.dao.ReviewDAO;
@@ -17,9 +21,12 @@ import pj.mvc.jsp.dao.ShelfDAO;
 import pj.mvc.jsp.dao.ShelfDAOImpl;
 import pj.mvc.jsp.dto.BoardDTO;
 import pj.mvc.jsp.dto.CustomerDTO;
+import pj.mvc.jsp.dto.DeliveryDTO;
+import pj.mvc.jsp.dto.OrderDTO;
 import pj.mvc.jsp.dto.ProductDTO;
 import pj.mvc.jsp.dto.ReviewDTO;
 import pj.mvc.jsp.dto.ShelfDTO;
+import pj.mvc.jsp.dto.ZipcodeDTO;
 
 public class CustomerServiceImpl implements CustomerService {
 	CustomerDAO dao;
@@ -295,10 +302,50 @@ public class CustomerServiceImpl implements CustomerService {
 		
 	}
 	
-	@Override // 상품 구매하기
+	@Override // 상품 구매하기 처리
 	public void buyProductAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("buyProductAction() 서비스 실행");
 		
+		// 1-1. 화면에서 데이터를 받아온다.
+		String customer_id = (String)req.getSession().getAttribute("sessionId");
+		String zipcode = req.getParameter("zipcode");
+		String delivery_message = req.getParameter("msg");
+		String payment = req.getParameter("payment");
+		
+		// 1-2. 현재 고객의 장바구니 목록 조회
+		ShelfDAO dao = ShelfDAOImpl.getInstance();
+		List<ShelfDTO> slist = dao.selectCartList(customer_id);
+		
+		// 1-3. 주문에 넣을 데이터들을 담을 큰 바구니 생성
+		List<OrderDTO> olist = new ArrayList<>();
+		
+		// 1-4. 큰 바구니에 담을 DTO를 생성하여 데이터를 등록 후 olist에 추가
+		for (ShelfDTO shelf : slist) {	
+			OrderDTO dto = new OrderDTO();
+			dto.setCustomer_id(customer_id);
+			dto.setProduct_no(shelf.getProduct_no());
+			dto.setOrder_amount(shelf.getAmount());
+			dto.setZipcode(zipcode);
+			dto.setDelivery_message(delivery_message);
+			dto.setPayment(payment);
+			
+			olist.add(dto);
+		}
+		
+		// 2. DAO를 생성하여 DB에서 주문목록을 등록한다.
+		int insertResult = 0;
+		OrderDAO dao2 = OrderDAOImpl.getInstance();
+		insertResult = dao2.insertOrder(olist);
+		
+		// 2-2. 주문 등록에 성공하면 장바구니 내역 삭제
+		int deleteResult = 0;
+		if (insertResult != 0) {
+			deleteResult = dao.deleteCartAll();
+		}
+		
+		// 3. request에 결과를 저장한다.
+		req.setAttribute("insertResult", insertResult);
+		req.setAttribute("deleteResult", deleteResult);
 	}
 
 //-------------------------------------- [ 상품리뷰 ] --------------------------------------------	
@@ -368,7 +415,7 @@ public class CustomerServiceImpl implements CustomerService {
 		int updateResult = 0;
 		// 2-2. 있으면 기존 장바구니 상품의 수량만 증가시킵니다.
 		if (oldDTO != null) {
-			updateResult = dao.updateCartItemAmount(oldDTO.getShelf_no(), amount);
+			updateResult = dao.InsertDupCartItem(oldDTO.getShelf_no(), amount);
 			req.setAttribute("updateResult", updateResult);
 		
 			// 2-2. 없는 경우, 장바구니 DB에 해당 정보를 새로 등록합니다.
@@ -392,7 +439,7 @@ public class CustomerServiceImpl implements CustomerService {
 		
 		// 2. DAO를 생성하여 해당 고객의 장바구니를 DB에서 조회합니다.
 		ShelfDAO dao = ShelfDAOImpl.getInstance();
-		Map<String, ShelfDTO> slist = dao.selectCartList(customer_id);
+		List<ShelfDTO> slist = dao.selectCartList(customer_id);
 		
 		// 3. request 객체에 결과를 저장합니다.
 		req.setAttribute("slist", slist);
@@ -449,12 +496,45 @@ public class CustomerServiceImpl implements CustomerService {
 		
 	}
 
-	@Override// 장바구니 구매
+	@Override// 장바구니 결제하기 페이지 이동
 	public void buyCartProductAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("buyCartProductAction() 서비스 실행");
 		
+		// 1. 현재 로그인 고객의 아이디를 받아옵니다.
+		String customer_id = (String)req.getSession().getAttribute("sessionId");
+		
+		// 2. DAO를 생성하여 해당 유저의 장바구니 목록을 불러옵니다.
+		ShelfDAO dao = ShelfDAOImpl.getInstance();
+		List<ShelfDTO> slist = dao.selectCartList(customer_id);
+		
+		// 3. request 객체에 결과를 저장합니다.
+		req.setAttribute("slist", slist);
+		
 	}
 
+	@Override
+	public void selectCustomerDeliveryInfo(HttpServletRequest req, HttpServletResponse res) {
+		System.out.println("selectCustomerAddress() 서비스 실행");
+		
+		// 1. 현재 로그인 고객의 아이디를 받아옵니다.
+		String customer_id = (String)req.getSession().getAttribute("sessionId");
+		
+		// 2-1. DAO를 생성하여 해당 고객의 zipcode를 받아옵니다.
+		CustomerDAO dao = CustomerDAOImpl.getInstance();
+		String zipcode = dao.selectCustomerZipcode(customer_id);
+		System.out.println("zipcode : " + zipcode);
+		// 2-2. zipcode로 주소정보를 받아옵니다.
+		ZipcodeDTO dto = dao.selectZipcodeInfo(zipcode);
+		
+		// 2-3. 고객의 정보를 받아옵니다.
+		CustomerDTO dto2 = dao.selectCustomer(customer_id);
+
+		// 3. request 객체에 결과를 저장합니다.
+		req.setAttribute("z_dto", dto);
+		req.setAttribute("c_dto", dto2);
+		
+	}
+	
 //-------------------------------------- [ 게시판 ] --------------------------------------------	
 
 	@Override // 게시판 조회
@@ -565,11 +645,15 @@ public class CustomerServiceImpl implements CustomerService {
 	public void selectOrderListAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("selectOrderListAction() 서비스 실행");
 		
-	}
-
-	@Override // 주문 상세조회
-	public void selectOrderDetailAction(HttpServletRequest req, HttpServletResponse res) {
-		System.out.println("selectOrderDetailAction() 서비스 실행");
+		// 1. 고객 아이디를 받아옵니다.
+		String customer_id = (String)req.getSession().getAttribute("sessionId");
+		
+		// 2. DAO를 생성하여 DB에서 주문목록을 조회합니다.
+		OrderDAO dao = OrderDAOImpl.getInstance();
+		List<OrderDTO> olist = dao.selectOrder(customer_id);
+		
+		// 3. request 객체에 결과를 저장합니다.
+		req.setAttribute("olist", olist);
 		
 	}
 
@@ -577,11 +661,68 @@ public class CustomerServiceImpl implements CustomerService {
 	public void cancelOrderAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("cancelOrderAction() 서비스 실행");
 		
+		// 1. 주문번호를 받아옵니다.
+		String order_no = req.getParameter("order_no");
+		String state = "주문취소";
+		
+		// 2. DAO를 생성하여 DB에서 해당 주문상태를 변경합니다.
+		int updateResult = 0;
+		OrderDAO dao = OrderDAOImpl.getInstance();
+		updateResult = dao.updateState(order_no, state);
+		
+		// 3. request 객체에 결과를 저장합니다.
+		req.setAttribute("updateResult", updateResult);
 	}
 
 	@Override // 환불
 	public void refundAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("refundAction() 서비스 실행");
+		
+		// 1. 주문번호를 받아옵니다.
+		String order_no = req.getParameter("order_no");
+		String state = "환불요청";
+		
+		// 2. DAO를 생성하여 DB에서 해당 주문상태를 변경합니다.
+		int updateResult = 0;
+		OrderDAO dao = OrderDAOImpl.getInstance();
+		updateResult = dao.updateState(order_no, state);
+		
+		// 3. request 객체에 결과를 저장합니다.
+		req.setAttribute("updateResult", updateResult);
+	}
+
+	@Override // 환불 취소
+	public void cancelRefundAction(HttpServletRequest req, HttpServletResponse res) {
+		System.out.println("cancelRefundAction() 서비스 실행");
+
+		// 1. 주문번호를 받아옵니다.
+		String order_no = req.getParameter("order_no");
+		String state = "환불취소";
+		
+		// 2. DAO를 생성하여 DB에서 해당 주문상태를 변경합니다.
+		int updateResult = 0;
+		OrderDAO dao = OrderDAOImpl.getInstance();
+		updateResult = dao.updateState(order_no, state);
+		
+		// 3. request 객체에 결과를 저장합니다.
+		req.setAttribute("updateResult", updateResult);
+		
+	}
+
+	@Override // 배송 상세조회
+	public void selectDeliveryDetail(HttpServletRequest req, HttpServletResponse res) {
+		System.out.println("selectDeliveryDetail() 서비스 실행");
+		
+		// 1. 운송장번호를 받아옵니다.
+		String billing_number = req.getParameter("billing_number");
+		
+		// 2-1. DAO를 생성하여 DB에서 배송 상세정보를 받아옵니다.
+		OrderDAO dao = OrderDAOImpl.getInstance();
+		List<DeliveryDTO> dlist = dao.selectDeliveryDetail(billing_number);
+		
+		// 3. request객체에 결과를 저장합니다.
+		req.setAttribute("dlist", dlist);
+		
 		
 	}
 }

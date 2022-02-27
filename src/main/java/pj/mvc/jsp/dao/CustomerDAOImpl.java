@@ -11,6 +11,7 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import pj.mvc.jsp.dto.CustomerDTO;
+import pj.mvc.jsp.dto.ZipcodeDTO;
 
 public class CustomerDAOImpl implements CustomerDAO {
 	// 커넥션 풀
@@ -219,6 +220,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 				dto.setCustomer_address(rs.getString("customer_address"));
 				dto.setCustomer_tel(rs.getString("customer_tel"));
 				dto.setCustomer_email(rs.getString("customer_email"));
+				dto.setCustomer_regist_day(rs.getDate("customer_regist_day"));
 			}
 			
 			System.out.println(dto);
@@ -263,4 +265,83 @@ public class CustomerDAOImpl implements CustomerDAO {
 		}		
 		return deleteResult;
 	}
+
+	@Override
+	public String selectCustomerZipcode(String strId) {
+		System.out.println("selectCustomerZipcode() - dao");
+		
+		String zipcode = "";
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "SELECT zipcode FROM customers WHERE customer_id=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, strId);
+
+			// DB에 회원정보 등록 및 결과 반환
+			rs = pstmt.executeQuery();
+			
+			// 결과가 있으면
+			if (rs.next()) zipcode = rs.getString("zipcode");
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			// 자원해제
+			try {
+				if(rs != null) rs.close();
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return zipcode;
+	}
+	
+	@Override
+	public ZipcodeDTO selectZipcodeInfo(String zipcode) {
+		System.out.println("selectZipcodeInfo() - dao");
+		
+		// 주소정보를 담을 DTO
+		ZipcodeDTO dto = new ZipcodeDTO();
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "SELECT * FROM zipcode_tbl"
+					   + " WHERE zipcode=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, zipcode);
+			
+			// DB에 회원정보 결과 반환
+			rs = pstmt.executeQuery();
+			
+			// 조회된 값을 dto에 저장
+			if (rs.next()) {
+				dto.setZipcode(rs.getString("zipcode"));
+				dto.setSido(rs.getString("sido"));
+				dto.setGugum(rs.getString("gugum"));
+				dto.setDong(rs.getString("dong"));
+				dto.setBunji(rs.getString("bunji"));
+				dto.setDetail_address(rs.getString("detail_address"));
+			}
+			
+			System.out.println(dto);
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs != null) rs.close();
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}		
+		return dto;
+	}
+
 }

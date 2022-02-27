@@ -1,6 +1,7 @@
 package pj.mvc.jsp.dao;
 
 import pj.mvc.jsp.dto.CustomerDTO;
+import pj.mvc.jsp.dto.ZipcodeDTO;
 
 public interface CustomerDAO {
 
@@ -22,4 +23,10 @@ public interface CustomerDAO {
 	// 아이디, 비밀번호 체크
 	int idPasswordCheck(String strId, String strPassword);
 
+	// 회원 우편번호 가져오기
+	String selectCustomerZipcode(String strId);
+
+	// 주소정보 가져오기
+	ZipcodeDTO selectZipcodeInfo(String zipcode);
+	
 }

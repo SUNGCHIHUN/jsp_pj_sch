@@ -77,6 +77,9 @@ public interface CustomerService {
 	// 장바구니 상품구매
 	void buyCartProductAction(HttpServletRequest req, HttpServletResponse res);
 
+	// 고객 배송지 정보 가져오기
+	void selectCustomerDeliveryInfo(HttpServletRequest req, HttpServletResponse res);
+	
 //-------------------------- [ 게시판 ] --------------------------------	
 
 	// 게시판 조회
@@ -100,12 +103,15 @@ public interface CustomerService {
 	void selectOrderListAction(HttpServletRequest req, HttpServletResponse res);
 	
 	// 배송 상세조회
-	void selectOrderDetailAction(HttpServletRequest req, HttpServletResponse res);
+	void selectDeliveryDetail(HttpServletRequest req, HttpServletResponse res);
 	
 	// 주문 취소
 	void cancelOrderAction(HttpServletRequest req, HttpServletResponse res);
 	
-	// 환불
+	// 환불 요청
 	void refundAction(HttpServletRequest req, HttpServletResponse res);
-	
+
+	// 환불 취소
+	void cancelRefundAction(HttpServletRequest req, HttpServletResponse res);
+
 }

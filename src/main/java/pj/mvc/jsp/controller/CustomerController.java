@@ -155,19 +155,31 @@ public class CustomerController extends HttpServlet {
 			viewPage = "customer/product/product_detail.jsp";
 
 		// 구매하기 페이지 이동
-		}  else if (url.equals("/pay.do")) {
+		} else if (url.equals("/pay.do")) {
 			System.out.println("[/pay.do] 진입");
 			
-			viewPage = "customer/pay/pay.jsp";
-
-		// 결제하기 처리
-		} else if (url.equals("/pay_action.do")) {
-			System.out.println("[/pay_action.do] 진입");
+			service.buyCartProductAction(req, res);
 			
 			viewPage = "customer/pay/pay.jsp";
 
+		// 본인 주소 가져오기
+		} else if (url.equals("/select_customer_address.do")) {
+			System.out.println("[/select_customer_address.do] 진입");
+			
+			service.selectCustomerDeliveryInfo(req, res);
+			
+			viewPage = "customer/pay/select_customer_address.jsp";
+
+		// 결제하기 처리
+		}  else if (url.equals("/pay_action.do")) {
+			System.out.println("[/pay_action.do] 진입");
+			
+			service.buyProductAction(req, res);
+
+			viewPage = "customer/pay/pay_action.jsp";
+
 		// 리뷰등록 처리
-		} else if (url.equals("/review_add_action.do")) {
+		}else if (url.equals("/review_add_action.do")) {
 			System.out.println("[/review_add_action.do] 진입");
 
 			service.insertReviewAction(req, res);
@@ -182,14 +194,8 @@ public class CustomerController extends HttpServlet {
 
 			viewPage = "customer/review/review_delete_action.jsp";
 
-		// 결제하기 처리
-		} else if (url.equals("/pay_action.do")) {
-			System.out.println("[/pay_action.do] 진입");
-
-			viewPage = "customer/pay/pay_action.jsp";
-
 		// 게시판 조회
-		} else if (url.equals("/board_list.do")) {
+		}  else if (url.equals("/board_list.do")) {
 			System.out.println("[/board_list.do] 진입");
 			
 			service.selectBoardListAction(req, res);
@@ -246,6 +252,8 @@ public class CustomerController extends HttpServlet {
 		} else if (url.equals("/order_list.do")) {
 			System.out.println("[/order_list.do] 진입");
 
+			service.selectOrderListAction(req, res);
+			
 			viewPage = "customer/order/order_list.jsp";
 		
 		// 장바구니 페이지 이동
@@ -287,14 +295,45 @@ public class CustomerController extends HttpServlet {
 			service.deleteCartAllAction(req, res);
 			
 			viewPage = "customer/cart/cart_delete_all_action.jsp";
-
+			
+		// 주문 취소
+		} else if (url.equals("/cancel_order_action.do")) {
+			System.out.println("[cancel_order_action.do] 진입");
+		
+			service.cancelOrderAction(req, res);
+		
+			viewPage = "customer/order/cancel_order_action.jsp";
+			
+		// 환불 요청
+		} else if (url.equals("/refund_action.do")) {
+			System.out.println("[refund_action.do] 진입");
+		
+			service.refundAction(req, res);
+		
+			viewPage = "customer/order/refund_action.jsp";
+		
+		// 환불 취소
+		} else if (url.equals("/cancel_refund_action.do")) {
+			System.out.println("[cancel_refund_action.do] 진입");
+		
+			service.cancelRefundAction(req, res);
+		
+			viewPage = "customer/order/cancel_refund_action.jsp";
+		
+		// 배송 상세조회
+		} else if (url.equals("/delivery_detail.do")) {
+			System.out.println("[delivery_detail.do] 진입");
+			
+			service.selectDeliveryDetail(req, res);
+			
+			viewPage = "customer/delivery/delivery_detail.jsp";
 		}
 		
 		System.out.println("------------ [세션정보] ------------");
-		System.out.println("| 현재 loginResult  : " + req.getSession().getAttribute("loginResult") + " |");
-		System.out.println("| 현재 sessionId    : " + req.getSession().getAttribute("sessionId") + " |");
-		System.out.println("| 현재 sessionName  : " + req.getSession().getAttribute("sessionName") + " |");
-		System.out.println("| 현재 authResult   : " + req.getSession().getAttribute("authResult") + " |");
+		System.out.println("| 현재 loginResult  : " + req.getSession().getAttribute("loginResult") + "\t |");
+		System.out.println("| 현재 sessionId    : " + req.getSession().getAttribute("sessionId") + "\t |");
+		System.out.println("| 현재 sessionName  : " + req.getSession().getAttribute("sessionName") + "\t |");
+		System.out.println("| 현재 authResult   : " + req.getSession().getAttribute("authResult") + "\t |");
 		System.out.println("----------------------------------");
 		
 		// jsp 화면으로 이동

@@ -50,7 +50,7 @@
 							<td><input type="text" class="inputBox" name="name" placeholder="이름"></td>
 						</tr>
 						<tr>
-							<th>주소</th>
+							<th style="vertical-align: top;">주소</th>
 							<td>
 								<input type="number" id="zipcode" class="inputZipcode" name="zipcode" min=0 max=99999 readonly>
 								<input type="button" value="우편번호" class="zipcodeBtn" onclick="setAddress();"><br>

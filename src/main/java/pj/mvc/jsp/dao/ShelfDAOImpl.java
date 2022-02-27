@@ -4,8 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -79,11 +79,11 @@ public class ShelfDAOImpl implements ShelfDAO {
 	}
 
 	@Override
-	public Map<String, ShelfDTO> selectCartList(String customer_id) {
+	public List<ShelfDTO> selectCartList(String customer_id) {
 		System.out.println("selectCartList() - dao");
 		
 		// 장바구니 정보를 담을 큰 바구니 생성
-		Map<String, ShelfDTO> slist = new HashMap<>();
+		List<ShelfDTO> slist = new ArrayList<>();
 		
 		try {
 			conn = dataSource.getConnection();
@@ -110,7 +110,7 @@ public class ShelfDAOImpl implements ShelfDAO {
 					dto.setProduct_price(rs.getString("product_price"));
 					dto.setAmount(rs.getInt("amount"));
 
-					slist.put(rs.getString("shelf_no"), dto);
+					slist.add(dto);
 					
 				} while(rs.next());
 			}
@@ -133,6 +133,37 @@ public class ShelfDAOImpl implements ShelfDAO {
 		return slist;
 	}
 
+	@Override
+	public int InsertDupCartItem(String shelf_no, int amount) {
+		System.out.println("InsertDupInsertCart() - dao");
+		
+		// 장바구니 중복 추가 결과 [ 성공:1 실패:0 ]
+		int updateResult = 0;
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "UPDATE shelf SET amount=amount+? WHERE shelf_no=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, amount);
+			pstmt.setString(2, shelf_no);
+			
+			updateResult = pstmt.executeUpdate();
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		System.out.println("updateResult : " + updateResult);
+		return updateResult;
+	}
+	
 	@Override
 	public int updateCartItemAmount(String shelf_no, int amount) {
 		System.out.println("updateCartAmount() - dao");
