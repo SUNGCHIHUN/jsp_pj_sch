@@ -4,8 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -41,20 +41,32 @@ public class ReviewDAOImpl implements ReviewDAO {
 	}
 	
 	@Override
-	public Map<String, ReviewDTO> selectReview(String strNo) {
+	public List<ReviewDTO> selectReview(int start, int end, String strNo) {
 		System.out.println("selectReview() - dao");
 
 		// 상품리뷰들을 담을 큰바구니 생성
-		Map<String, ReviewDTO> rlist = new HashMap<>();
+		List<ReviewDTO> rlist = new ArrayList<>();
 
 		try {
 			conn = dataSource.getConnection();
 			
-			String sql = "SELECT * FROM review WHERE product_no=?";
+			String sql = "SELECT *"
+					+ "  FROM ("
+					+ "        SELECT A.*, ROWNUM AS rn"
+					+ "          FROM (SELECT *"
+					+ "                  FROM review"
+					+ "                 WHERE product_no=?"
+					+ "                 ORDER BY review_no DESC"
+					+ "                ) A"
+					+ "       )"
+					+ " WHERE rn BETWEEN ? AND ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, strNo);
+			pstmt.setInt(2, start);
+			pstmt.setInt(3, end);
 			
 			rs = pstmt.executeQuery();
+			
 			
 			// 조회가 안될 때까지 반복
 			while (rs.next()) {
@@ -68,7 +80,7 @@ public class ReviewDAOImpl implements ReviewDAO {
 				dto.setProduct_no(rs.getString("product_no"));
 				dto.setReview_star(rs.getInt("review_star"));
 				
-				rlist.put(rs.getString("review_no"), dto);
+				rlist.add(dto);
 			}
 			
 			System.out.println(rlist);
@@ -156,5 +168,34 @@ public class ReviewDAOImpl implements ReviewDAO {
 		}
 		
 		return deleteResult;
+	}
+	@Override
+	public int selectReviewTotal() {
+		System.out.println("selectReviewTotal() - dao");
+		
+		int total = 0;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "SELECT COUNT(*) total FROM review";
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			if (rs.next()) total = rs.getInt("total");
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) rs.close();
+				if (pstmt != null) pstmt.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return total;
 	}
 }

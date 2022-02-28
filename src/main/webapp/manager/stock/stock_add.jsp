@@ -23,7 +23,7 @@
 		<%@ include file="/manager/common/left_menu.jsp" %>
 			<!-- 오른쪽 컨텐츠 -->
 			<div id="section">
-				<form action="${path}/stock_add_action.ad" method="post">
+				<form action="${path}/stock_add_action.st" method="post" enctype="multipart/form-data">
 					<table>
 						<tr>
 							<th>상품명</th>
@@ -51,7 +51,7 @@
 						</tr>
 						<tr>
 							<th>상품이미지</th>
-							<td><input type="file" name="p_file"></td>
+							<td><input type="file" name="p_file" accept="image/*"></td>
 						</tr>
 						<tr>
 							<td colspan="2">

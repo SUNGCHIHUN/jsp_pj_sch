@@ -2,7 +2,6 @@ package pj.mvc.jsp.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,6 +26,7 @@ import pj.mvc.jsp.dto.ProductDTO;
 import pj.mvc.jsp.dto.ReviewDTO;
 import pj.mvc.jsp.dto.ShelfDTO;
 import pj.mvc.jsp.dto.ZipcodeDTO;
+import pj.mvc.jsp.util.Paging;
 
 public class CustomerServiceImpl implements CustomerService {
 	CustomerDAO dao;
@@ -250,21 +250,30 @@ public class CustomerServiceImpl implements CustomerService {
 		System.out.println("selectProductListAction() 서비스 실행");
 		
 		// 1. 카테고리를 받아온다.
+		String pageNum = req.getParameter("pageNum");
 		String category = req.getParameter("product_category");
 		
 		// 2. DAO와 결과를 담을 바구니 생성
 		ProductDAO dao = ProductDAOImpl.getInstance();
-		Map<String, ProductDTO> plist;
+		List<ProductDTO> plist;
+		
+		// 페이징 처리
+		Paging paging = new Paging(pageNum);
+		int total = dao.selectProductTotal();
+		paging.setTotalCount(total);
+		
+		int start = paging.getStartRow();
+		int end = paging.getEndRow();
 		
 		// 카테고리가 없으면
 		if (category == null) {
 			// DB에서 전체 조회
-			plist = dao.selectProduct();
+			plist = dao.selectProductList(start, end);
 			category = "all";
 		// 카테고리가 있으면
 		} else {
 			// 해당 카테고리로 DB에서 조회
-			plist = dao.selectProductCategory(category);
+			plist = dao.selectProductListCategory(start, end, category);
 		}
 		
 		// 3. 조회된 상품정보를 request객체에 저장
@@ -278,15 +287,18 @@ public class CustomerServiceImpl implements CustomerService {
 		else if(category.equals("water")) ko_category = "생수";
 		else if(category.equals("coffee")) ko_category = "커피";
 		
+		req.setAttribute("paging", paging);
 		req.setAttribute("ko_category", ko_category);
+		
 	}
 
 	@Override // 상품 상세조회
 	public void selectProductDetailAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("selectProductDetailAction() 서비스 실행");
 		
-		// 1. 선택한 상품번호를 받아온다.
+		// 1. 선택한 상품번호와 리뷰 페이지번호를 받아온다.
 		String product_no = req.getParameter("product_no");
+		String pageNum = req.getParameter("pageNum");
 		
 		// 2. 해당 상품의 상세 내역을 받아온다.
 		ProductDAO pdao = ProductDAOImpl.getInstance();
@@ -294,9 +306,19 @@ public class CustomerServiceImpl implements CustomerService {
 		
 		// 3. 해당 상품의 리뷰를 받아온다.
 		ReviewDAO rdao = ReviewDAOImpl.getInstance();
-		Map<String, ReviewDTO> rlist = rdao.selectReview(product_no);
+		
+		// 페이징 처리
+		Paging paging = new Paging(pageNum);
+		int total = rdao.selectReviewTotal();
+		paging.setTotalCount(total);
+		
+		int start = paging.getStartRow();
+		int end = paging.getEndRow();
+		
+		List<ReviewDTO> rlist = rdao.selectReview(start, end, product_no);
 		
 		// 3. 조회된 상품 상세정보, 리뷰를 request에 저장
+		req.setAttribute("paging", paging);
 		req.setAttribute("p_dto", dto);
 		req.setAttribute("rlist", rlist);
 		
@@ -541,14 +563,26 @@ public class CustomerServiceImpl implements CustomerService {
 	public void selectBoardListAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("selectBoardListAction() 서비스 실행");
 		
-		// 1. 게시판의 카테고리를 받아온다.
+		// 1. 게시판의 카테고리와 페이지번호를 받아온다.
 		String category = req.getParameter("board_category");
+		String pageNum = req.getParameter("pageNum");
 		
 		// 2. DAO를 생성하여 DB에서 카테고리와 일치하는 게시판을 조회한다.
 		BoardDAO dao = BoardDAOImpl.getInstance();
-		Map<String, BoardDTO> blist = dao.selectBoardList(category);
+		
+		// 페이징 처리
+		Paging paging = new Paging(pageNum);
+		int total = dao.selectBoardTotal(category);
+		System.out.println("total : " + total);
+		paging.setTotalCount(total);
+		
+		int start = paging.getStartRow();
+		int end = paging.getEndRow();
+		
+		List<BoardDTO> blist = dao.selectBoardList(start, end, category);
 
 		// 3. 조회 결과 게시판 목록들을 request객체에 저장한다.
+		req.setAttribute("paging", paging);
 		req.setAttribute("blist", blist);
 		
 		// 카테고리
@@ -645,14 +679,25 @@ public class CustomerServiceImpl implements CustomerService {
 	public void selectOrderListAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("selectOrderListAction() 서비스 실행");
 		
-		// 1. 고객 아이디를 받아옵니다.
+		// 1. 고객 아이디와 페이지번호를 받아옵니다.
 		String customer_id = (String)req.getSession().getAttribute("sessionId");
+		String pageNum = req.getParameter("pageNum");
 		
 		// 2. DAO를 생성하여 DB에서 주문목록을 조회합니다.
 		OrderDAO dao = OrderDAOImpl.getInstance();
-		List<OrderDTO> olist = dao.selectOrder(customer_id);
+		
+		// 페이징 처리
+		Paging paging = new Paging(pageNum);
+		int total = dao.selectOrderTotal(customer_id);
+		paging.setTotalCount(total);
+		
+		int start = paging.getStartRow();
+		int end = paging.getEndRow();
+		
+		List<OrderDTO> olist = dao.selectOrder(start, end, customer_id);
 		
 		// 3. request 객체에 결과를 저장합니다.
+		req.setAttribute("paging", paging);
 		req.setAttribute("olist", olist);
 		
 	}

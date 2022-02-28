@@ -121,7 +121,7 @@
 										<input type="hidden" class="delivery_price" value="${shelf.amount}">
 										<input type="hidden" class="final_total_price" value="${shelf.amount}">
 									</td>
-									<td style="width:100px;"><img src="${path}/resources/images/product/${shelf.product_img_name}" alt="상품이미지"></td>
+									<td style="width:100px;"><img src="${shelf.product_img_name}" alt="상품이미지"></td>
 									<td style="width:200px;">${shelf.product_name}</td>
 									<td>
 										<fmt:formatNumber value="${shelf.product_price}" pattern="#,### 원" />

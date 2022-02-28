@@ -100,7 +100,7 @@
 								<td>
 									2022-01-25
 								</td>
-								<td><a href="${path}/product_detail.do?product_no=${order.product_no}"><img src="${path}/resources/images/product/${order.product_img_name}" alt="상품이미지"></a></td>
+								<td><a href="${path}/product_detail.do?product_no=${order.product_no}"><img src="${order.product_img_name}" alt="상품이미지"></a></td>
 								<td>${order.product_name}</td>	
 								<td>${order.order_amount}</td>
 								<td>
@@ -132,15 +132,30 @@
 					</c:forEach>
 				</table>
 			</div>
+			<%-- 페이징 처리 --%>
 			<div id="page">
-			<ul>
-				<li><a href="#">◀</a></li>
-				<li><a href="#">1</a></li>
-				<li><a href="#">2</a></li>
-				<li><a href="#">3</a></li>
-				<li><a href="#">▶</a></li>
-			</ul>
-		</div>
+				<%-- 이전버튼 활성화 여부 --%>
+				<c:if test="${paging.startPage > 10}">
+					<a href="${path}/product_list.do?pageNum=${paging.prev}">[이전]</a>
+				</c:if>
+				
+				<%-- 페이지 번호 처리 --%>
+				<c:forEach var="num" begin="${paging.startPage}" end="${paging.endPage}">
+					<%-- 현재 페이지 번호는 눌리지 않게 처리 --%>
+					<c:if test="${num == paging.currentPage}">
+						<span style="font-weight: bold;">${num}</span>
+					</c:if>
+					
+					<c:if test="${num != paging.currentPage}">
+						<a href="${path}/product_list.do?pageNum=${num}">${num}</a>
+					</c:if>
+				</c:forEach>
+				
+				<%-- 다음버튼 활성화 여부 --%>
+				<c:if test="${paging.endPage < paging.pageCount}">
+					<a href="${path}/product_list.do?pageNum=${paging.next}">[다음]</a>
+				</c:if>
+			</div>
 		</div>
 	</div>
 	<%@ include file="/common/footer.jsp" %>

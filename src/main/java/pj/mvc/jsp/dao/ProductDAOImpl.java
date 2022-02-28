@@ -4,8 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -26,6 +26,7 @@ public class ProductDAOImpl implements ProductDAO {
 	
 	// 싱글톤
 	private static ProductDAO instance = new ProductDAOImpl();
+	
 	private ProductDAOImpl() {
 		try {
 			Context context = new InitialContext();
@@ -34,6 +35,7 @@ public class ProductDAOImpl implements ProductDAO {
 			e.printStackTrace();
 		}
 	}
+	
 	public static ProductDAO getInstance() {
 		if (instance == null) {
 			instance = new ProductDAOImpl();
@@ -42,17 +44,27 @@ public class ProductDAOImpl implements ProductDAO {
 	}
 	
 	@Override // 상품목록 조회
-	public Map<String, ProductDTO> selectProduct() {
-		System.out.println("selectProduct() - dao");
+	public List<ProductDTO> selectProductList(int start, int end) {
+		System.out.println("selectProductList() - dao");
 		
 		// 상품조회 정보들을 담을 큰바구니
-		Map<String, ProductDTO> plist = new HashMap<>();
+		List<ProductDTO> plist = new ArrayList<>();
 		
 		try {
 			conn = dataSource.getConnection();
 			
-			String sql = "SELECT * FROM products";
+			String sql = "SELECT *"
+					+ "  FROM ("
+					+ "        SELECT A.*, ROWNUM AS rn"
+					+ "          FROM (SELECT *"
+					+ "                  FROM products"
+					+ "                 ORDER BY product_no DESC"
+					+ "                ) A"
+					+ "       )"
+					+ " WHERE rn BETWEEN ? AND ?";
 			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, start);
+			pstmt.setInt(2, end);
 			
 			rs = pstmt.executeQuery();
 			
@@ -69,7 +81,7 @@ public class ProductDAOImpl implements ProductDAO {
 				dto.setProduct_category(rs.getString("product_category"));
 				
 				// dto를 큰 바구니에 담는다.
-				plist.put(rs.getString("product_no"), dto);
+				plist.add(dto);
 			}
 			System.out.println("상품이 " + plist.size() + "건 검색되었습니다.");
 		} catch (SQLException e) {
@@ -89,18 +101,29 @@ public class ProductDAOImpl implements ProductDAO {
 	}
 
 	@Override
-	public Map<String, ProductDTO> selectProductCategory(String strCategory) {
-		System.out.println("selectProductCategory() - dao");
+	public List<ProductDTO> selectProductListCategory(int start, int end, String strCategory) {
+		System.out.println("selectProductListCategory() - dao");
 		
 		// 상품조회 정보들을 담을 큰바구니
-		Map<String, ProductDTO> plist = new HashMap<>();
+		List<ProductDTO> plist = new ArrayList<>();
 		
 		try {
 			conn = dataSource.getConnection();
 			
-			String sql = "SELECT * FROM products WHERE product_category=?";
+			String sql = "SELECT *"
+					+ "  FROM ("
+					+ "        SELECT A.*, ROWNUM AS rn"
+					+ "          FROM (SELECT *"
+					+ "                  FROM products"
+					+ "                 WHERE product_category=?"
+					+ "                 ORDER BY product_no DESC"
+					+ "                ) A"
+					+ "       )"
+					+ " WHERE rn BETWEEN ? AND ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, strCategory);
+			pstmt.setInt(2, start);
+			pstmt.setInt(3, end);
 			
 			rs = pstmt.executeQuery();
 			
@@ -117,7 +140,7 @@ public class ProductDAOImpl implements ProductDAO {
 				dto.setProduct_category(rs.getString("product_category"));
 				
 				// dto를 큰 바구니에 담는다.
-				plist.put(rs.getString("product_no"), dto);
+				plist.add(dto);
 				
 			}
 			
@@ -139,7 +162,7 @@ public class ProductDAOImpl implements ProductDAO {
 	}
 
 	@Override
-	public Map<String, ProductDTO> searchProduct(String strName) {
+	public List<ProductDTO> searchProduct(int start, int end, String strName) {
 		return null;
 	}
 
@@ -188,5 +211,85 @@ public class ProductDAOImpl implements ProductDAO {
 		return dto;
 	}
 
-	
+	// 상품 등록
+	@Override
+	public int insertProduct(ProductDTO dto) {
+		
+		// 상품 등록 결과 [ 성공:1 실패:0 ]
+		int insertResult = 0;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "INSERT INTO Products(product_no, product_name, product_price, product_amount, product_regist_day, product_img_name, product_category)" + 
+						 " VALUES(products_seq.nextval, ?, ?, ?, sysdate, ?, ?)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getProduct_name());
+			pstmt.setInt(2, dto.getProduct_price());
+			pstmt.setInt(3, dto.getProduct_amount());
+			pstmt.setString(4, dto.getProduct_img_name());
+			pstmt.setString(5, dto.getProduct_category());
+
+			// DB에 상품 등록 및 결과행 개수 반환
+			insertResult = pstmt.executeUpdate();
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		System.out.println("insertResult : " + insertResult);
+		return insertResult;
+	}
+
+	// 상품 수정
+	@Override
+	public int updateProduct(String product_no) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	// 상품 삭제
+	@Override
+	public int deleteProduct(String product_no) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	// 상품 총 개수
+	@Override
+	public int selectProductTotal() {
+		System.out.println("selectProductTotal() - dao");
+			
+		int total = 0;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "SELECT COUNT(*) total FROM Products";
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			if (rs.next()) total = rs.getInt("total");
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) rs.close();
+				if (pstmt != null) pstmt.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return total;
+	}
 }

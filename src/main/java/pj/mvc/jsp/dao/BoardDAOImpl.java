@@ -4,8 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -44,19 +44,29 @@ public class BoardDAOImpl implements BoardDAO {
 	}
 	
 	@Override
-	public Map<String, BoardDTO> selectBoardList(String board_category) {
+	public List<BoardDTO> selectBoardList(int start, int end, String board_category) {
 		System.out.println("selectBoardList() - dao");
 		
 		// 게시판들을 담을 큰 바구니 생성
-		Map<String, BoardDTO> blist = new HashMap<>();
+		List<BoardDTO> blist = new ArrayList<>();
 		
 		try {
 			conn = dataSource.getConnection();
 			
-			String sql = "SELECT * FROM Boards" +
-					     " WHERE board_category=?";
+			String sql = "SELECT *"
+					+ "  FROM ("
+					+ "        SELECT A.*, ROWNUM AS rn"
+					+ "          FROM (SELECT *"
+					+ "                  FROM boards"
+					+ "                 WHERE board_category=?"
+					+ "                 ORDER BY board_no DESC"
+					+ "                ) A"
+					+ "       )"
+					+ " WHERE rn BETWEEN ? AND ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, board_category);
+			pstmt.setInt(2, start);
+			pstmt.setInt(3, end);
 			
 			// DB에 회원정보 결과 반환
 			rs = pstmt.executeQuery();
@@ -75,7 +85,7 @@ public class BoardDAOImpl implements BoardDAO {
 				dto.setBoard_hits(rs.getInt("board_hits"));
 				dto.setBoard_state(rs.getString("board_state"));
 
-				blist.put(rs.getString("board_no"), dto);
+				blist.add(dto);
 			}
 			
 		} catch(SQLException e) {
@@ -242,6 +252,37 @@ public class BoardDAOImpl implements BoardDAO {
 		
 		System.out.println("deleteResult : " + deleteResult);
 		return deleteResult;
+	}
+
+	@Override
+	public int selectBoardTotal(String board_category) {
+		System.out.println("selectBoardTotal() - dao");
+		
+		int total = 0;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "SELECT COUNT(*) total FROM Boards WHERE board_category=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, board_category);
+			
+			rs = pstmt.executeQuery();
+			if (rs.next()) total = rs.getInt("total");
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) rs.close();
+				if (pstmt != null) pstmt.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return total;
 	}
 
 }

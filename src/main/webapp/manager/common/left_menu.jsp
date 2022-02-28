@@ -17,8 +17,8 @@
 		<div class="menu">
 			<ul>
 				<li>재고관리</li>
-				<li><a href="#">상품목록</a></li>
-				<li><a href="#">상품등록</a></li>
+				<li><a href="${path}/stock_list.st">상품목록</a></li>
+				<li><a href="${path}/stock_add.st">상품등록</a></li>
 			</ul>
 			<ul>
 				<li>주문관리</li>
