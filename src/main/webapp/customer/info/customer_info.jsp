@@ -24,8 +24,8 @@
 		<div id="section1">
 			<div class="section_menu">
 				<ul>
-					<li><a href="${path}/customer_auth_action.do"><b>회원정보</b></a></li>
-					<li><a href="${path}/order_list.do">주문목록</a></li>
+					<li><b><a href="${path}/customer_auth.do">회원정보</a></b></li>
+					<li><a href="${path}/order_list.do">주문내역</a></li>
 				</ul>
 			</div>
 		</div>	

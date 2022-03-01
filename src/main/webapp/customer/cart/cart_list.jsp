@@ -87,6 +87,7 @@
 		</div>
 		<div id="section2">
 			<form name="cart_list" action="${path}/pay.do" method="post" onsubmit="pay();">
+				<input type="hidden" name="buy_state" value="2"> 
 				<div class="cart_list">
 					<table>
 						<tr>

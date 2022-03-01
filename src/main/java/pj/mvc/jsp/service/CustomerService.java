@@ -6,10 +6,10 @@ import javax.servlet.http.HttpServletResponse;
 public interface CustomerService {
 	
 	// 세션 초기화
-	void sessionCheck(HttpServletRequest req, HttpServletResponse res);	
+	void sessionCheck(HttpServletRequest req, HttpServletResponse res);
 	
 //-------------------------- [ 로그인 ] --------------------------------
-
+	
 	// 로그인 처리
 	void loginAction(HttpServletRequest req, HttpServletResponse res);
 	
@@ -47,7 +47,11 @@ public interface CustomerService {
 	void selectProductDetailAction(HttpServletRequest req, HttpServletResponse res);
 	
 	// 상품 구매하기
+	void buyProduct(HttpServletRequest req, HttpServletResponse res);
+
+	// 상품 구매 처리	
 	void buyProductAction(HttpServletRequest req, HttpServletResponse res);
+	
 	
 //-------------------------- [ 상품리뷰 ] --------------------------------	
 
@@ -75,7 +79,7 @@ public interface CustomerService {
 	void deleteCartAllAction(HttpServletRequest req, HttpServletResponse res);
 	
 	// 장바구니 상품구매
-	void buyCartProductAction(HttpServletRequest req, HttpServletResponse res);
+	void buyCartProduct(HttpServletRequest req, HttpServletResponse res);
 
 	// 고객 배송지 정보 가져오기
 	void selectCustomerDeliveryInfo(HttpServletRequest req, HttpServletResponse res);

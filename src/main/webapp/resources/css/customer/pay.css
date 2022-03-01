@@ -109,6 +109,12 @@ table td {
 	color: blue;		
 }
 
+#payment {
+	font-size: 25px;
+	font-weight: 900;
+	color: black;
+}
+
 .payBtn {
 	width: 230px;
 	height: 70px;
@@ -117,4 +123,8 @@ table td {
 	border: none;
 	font-size:20px;
 	color:white;
+}
+
+#msg {
+	color: red;
 }

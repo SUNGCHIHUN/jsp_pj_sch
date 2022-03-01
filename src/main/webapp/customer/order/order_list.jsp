@@ -50,7 +50,7 @@
 		<div id="section1">
 			<div class="section_menu">
 				<ul>
-					<li><a href="${path}/customer_info.do">회원정보</a></li>
+					<li><a href="${path}/customer_auth.do">회원정보</a></li>
 					<li><a href="${path}/order_list.do"><b>주문내역</b></a></li>
 				</ul>
 			</div>

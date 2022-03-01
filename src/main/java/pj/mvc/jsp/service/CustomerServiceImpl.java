@@ -329,39 +329,67 @@ public class CustomerServiceImpl implements CustomerService {
 		System.out.println("buyProductAction() 서비스 실행");
 		
 		// 1-1. 화면에서 데이터를 받아온다.
+		int buy_state = Integer.parseInt(req.getParameter("buy_state"));
+		System.out.println("buyState : " + buy_state);
 		String customer_id = (String)req.getSession().getAttribute("sessionId");
 		String zipcode = req.getParameter("zipcode");
 		String delivery_message = req.getParameter("msg");
 		String payment = req.getParameter("payment");
+
+		// 2. 주문에 넣을 데이터들을 담을 큰 바구니 생성
+		ShelfDAO dao = null;
+		OrderDAO dao2 = null;
 		
-		// 1-2. 현재 고객의 장바구니 목록 조회
-		ShelfDAO dao = ShelfDAOImpl.getInstance();
-		List<ShelfDTO> slist = dao.selectCartList(customer_id);
-		
-		// 1-3. 주문에 넣을 데이터들을 담을 큰 바구니 생성
 		List<OrderDTO> olist = new ArrayList<>();
+		List<ShelfDTO> slist = new ArrayList<>();
 		
-		// 1-4. 큰 바구니에 담을 DTO를 생성하여 데이터를 등록 후 olist에 추가
-		for (ShelfDTO shelf : slist) {	
+		// 바로 구매인 경우
+		if (buy_state == 1) {
+			System.out.println("바로구매 서비스 수행중");
+			
+			String product_no = req.getParameter("product_no");
+			int order_amount = Integer.parseInt(req.getParameter("amount"));
+			
 			OrderDTO dto = new OrderDTO();
 			dto.setCustomer_id(customer_id);
-			dto.setProduct_no(shelf.getProduct_no());
-			dto.setOrder_amount(shelf.getAmount());
+			dto.setProduct_no(product_no);
+			dto.setOrder_amount(order_amount);
 			dto.setZipcode(zipcode);
 			dto.setDelivery_message(delivery_message);
 			dto.setPayment(payment);
-			
+		
 			olist.add(dto);
+
+		// 장바구니 구매인 경우
+		} else if (buy_state == 2) {
+			System.out.println("장바구니 구매 서비스 수행중");
+			
+			// 현재 고객의 장바구니 목록 조회
+			dao = ShelfDAOImpl.getInstance();
+			slist = dao.selectCartList(customer_id);
+			
+			// 큰 바구니에 담을 DTO를 생성하여 데이터를 등록 후 olist에 추가
+			for (ShelfDTO shelf : slist) {	
+				OrderDTO dto = new OrderDTO();
+				dto.setCustomer_id(customer_id);
+				dto.setProduct_no(shelf.getProduct_no());
+				dto.setOrder_amount(shelf.getAmount());
+				dto.setZipcode(zipcode);
+				dto.setDelivery_message(delivery_message);
+				dto.setPayment(payment);
+				
+				olist.add(dto);
+			}
 		}
 		
-		// 2. DAO를 생성하여 DB에서 주문목록을 등록한다.
+		// 3. DAO를 생성하여 DB에서 주문목록을 등록한다.
 		int insertResult = 0;
-		OrderDAO dao2 = OrderDAOImpl.getInstance();
+		dao2 = OrderDAOImpl.getInstance();
 		insertResult = dao2.insertOrder(olist);
 		
 		// 2-2. 주문 등록에 성공하면 장바구니 내역 삭제
 		int deleteResult = 0;
-		if (insertResult != 0) {
+		if (buy_state == 2 && insertResult != 0) {
 			deleteResult = dao.deleteCartAll();
 		}
 		
@@ -519,8 +547,8 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override// 장바구니 결제하기 페이지 이동
-	public void buyCartProductAction(HttpServletRequest req, HttpServletResponse res) {
-		System.out.println("buyCartProductAction() 서비스 실행");
+	public void buyCartProduct(HttpServletRequest req, HttpServletResponse res) {
+		System.out.println("buyCartProduct() 서비스 실행");
 		
 		// 1. 현재 로그인 고객의 아이디를 받아옵니다.
 		String customer_id = (String)req.getSession().getAttribute("sessionId");
@@ -765,8 +793,26 @@ public class CustomerServiceImpl implements CustomerService {
 		OrderDAO dao = OrderDAOImpl.getInstance();
 		List<DeliveryDTO> dlist = dao.selectDeliveryDetail(billing_number);
 		
-		// 3. request객체에 결과를 저장합니다.
+		// 3. request 객체에 결과를 저장합니다.
 		req.setAttribute("dlist", dlist);
+		
+	}
+
+	@Override // 바로구매시 넘겨줄 상품정보 조회
+	public void buyProduct(HttpServletRequest req, HttpServletResponse res) {
+		System.out.println("buyProduct() 서비스 실행");
+		
+		// 1. 화면으로부터 상품번호와 구매수량을 받아옵니다.
+		String product_no = req.getParameter("product_no");
+		int amount = Integer.parseInt(req.getParameter("amount"));
+		
+		// 2. DAO를 생성하여 DB에서 상품정보를 저장합니다.
+		ProductDAO dao = ProductDAOImpl.getInstance();
+		ProductDTO p_dto = dao.selectProductDetail(product_no);
+		
+		// 3. request 객체에 결과를 저장합니다.
+		req.setAttribute("p_dto", p_dto);
+		req.setAttribute("amount", amount);
 		
 		
 	}

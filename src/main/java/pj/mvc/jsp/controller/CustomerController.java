@@ -158,9 +158,21 @@ public class CustomerController extends HttpServlet {
 		} else if (url.equals("/pay.do")) {
 			System.out.println("[/pay.do] 진입");
 			
-			service.buyCartProductAction(req, res);
+			// 구매방법
+			int buy_state = Integer.parseInt(req.getParameter("buy_state"));
+			System.out.println("buyState : " + buy_state);
 			
-			viewPage = "customer/pay/pay.jsp";
+			// 바로 구매
+			if (buy_state == 1) {
+				service.buyProduct(req, res);
+			
+			// 장바구니 구매
+			} else if (buy_state == 2) {
+				service.buyCartProduct(req, res);
+						
+			}
+			
+			viewPage = "customer/pay/pay.jsp?buyState=" + buy_state;
 
 		// 본인 주소 가져오기
 		} else if (url.equals("/select_customer_address.do")) {

@@ -14,8 +14,15 @@
 <script>
 	
 	$(function() {
+		// 장바구니 담기 버튼
 		$("#cartAddBtn").click(function() {
 			document.product_detail.action= "${path}/cart_add_action.do";
+			document.product_detail.submit();
+		});
+		
+		// 구매하기 버튼
+		$("#buyBtn").click(function() {
+			document.product_detail.action= "${path}/pay.do";
 			document.product_detail.submit();
 		});
 	});
@@ -31,8 +38,9 @@
 		</div>	
 		
 		<div id="section2">
-			<div class="product_detail">
-				<form action="${path}/pay.do?" method="post" name="product_detail">
+			<form name="product_detail" method="post">
+				<div class="product_detail">
+					<input type="hidden" name="buy_state" value="1">
 					<input type="hidden" name="product_no" value="${p_dto.product_no}">
 					<table>
 						<tr>
@@ -52,22 +60,21 @@
 									</li>
 									<li><hr></li>
 									<li><b>배송안내</b> <span style="color: gray;"> [배송비 : <input type="text" value="3000" class="inputDeliveryPrice" name="delivery_price" readonly> 원]</span></li>
-									<li>1월 25일(화) 도착 예정</li>
+									<li>3월 25일(화) 도착 예정</li>
 									<li><hr></li>
 									<li>
-										수량선택 <input type="number" class="inputAmount" name="amount" min="1" max="9999" 	value="1"> 개
+										수량선택 <input type="number" class="inputAmount" name="amount" min="1" max="9999" value="1"> 개
 									</li>
 									<li style="text-align:center;">
 										<input type="button" id="cartAddBtn" class="cartBtn" value="장바구니 담기">
-										<input type="submit" class="buyBtn" value="구매하기">
+										<input type="button" id="buyBtn" class="buyBtn" value="구매하기">
 									</li>
 								</ul>
 							</td>
 						</tr>
 					</table>
-				</form>
-			</div>
-
+				</div>
+			</form>
 			<div class="review">
 				<h1 id="reivew"> 제품 리뷰</h1>
 				<table>

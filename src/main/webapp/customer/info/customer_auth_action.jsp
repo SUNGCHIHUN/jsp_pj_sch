@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="../../common/setting.jsp" %>
+<%@ include file="/common/setting.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,7 +27,7 @@
 	</c:if>
 	
 	<%-- 인증을 성공한 경우 --%>
-	<c:if test="">
+	<c:if test="${authResult == 1}">
 		<c:redirect url="customer_info.do" />
 	</c:if>
 	
