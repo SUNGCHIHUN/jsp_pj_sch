@@ -10,6 +10,7 @@ public class ProductDTO {
     private Date product_regist_day; // 상품등록일
     private String product_img_name; // 상품이미지명
     private String product_category; // 상품카테고리
+    private String product_state; // 상품 상태
 	
     public ProductDTO() {}
 
@@ -69,10 +70,19 @@ public class ProductDTO {
 		this.product_category = product_category;
 	}
 
+	public String getProduct_state() {
+		return product_state;
+	}
+
+	public void setProduct_state(String product_state) {
+		this.product_state = product_state;
+	}
+
 	@Override
 	public String toString() {
 		return "ProductDTO [product_no=" + product_no + ", product_name=" + product_name + ", product_price="
 				+ product_price + ", product_amount=" + product_amount + ", product_regist_day=" + product_regist_day
-				+ ", product_img_name=" + product_img_name + ", product_category=" + product_category + "]";
+				+ ", product_img_name=" + product_img_name + ", product_category=" + product_category
+				+ ", product_state=" + product_state + "]";
 	}
 }

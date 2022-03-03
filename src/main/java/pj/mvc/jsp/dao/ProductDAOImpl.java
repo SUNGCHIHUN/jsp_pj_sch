@@ -79,6 +79,7 @@ public class ProductDAOImpl implements ProductDAO {
 				dto.setProduct_regist_day(rs.getDate("product_regist_day"));
 				dto.setProduct_img_name(rs.getString("product_img_name"));
 				dto.setProduct_category(rs.getString("product_category"));
+				dto.setProduct_state(rs.getString("product_state"));
 				
 				// dto를 큰 바구니에 담는다.
 				plist.add(dto);
@@ -191,6 +192,7 @@ public class ProductDAOImpl implements ProductDAO {
 				dto.setProduct_regist_day(rs.getDate("product_regist_day"));
 				dto.setProduct_img_name(rs.getString("product_img_name"));
 				dto.setProduct_category(rs.getString("product_category"));
+				dto.setProduct_state(rs.getString("product_state"));
 			}
 			
 			System.out.println(dto);
@@ -250,16 +252,74 @@ public class ProductDAOImpl implements ProductDAO {
 
 	// 상품 수정
 	@Override
-	public int updateProduct(String product_no) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int updateProduct(String product_no, ProductDTO dto) {
+		System.out.println("updateProduct() - dao");
+
+		// 상품 수정 결과 [ 성공:1 실패:0 ]
+		int updateResult = 0;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "UPDATE products SET product_name=?, product_price=?, product_amount=?, product_img_name=?, product_category=?, product_state=? WHERE product_no=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getProduct_name());
+			pstmt.setInt(2, dto.getProduct_price());
+			pstmt.setInt(3, dto.getProduct_amount());
+			pstmt.setString(4, dto.getProduct_img_name());
+			pstmt.setString(5, dto.getProduct_category());
+			pstmt.setString(6, dto.getProduct_state());
+			pstmt.setString(7, product_no);
+			
+			// DB에 상품 수정 및 결과행 개수 반환
+			updateResult = pstmt.executeUpdate();
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		System.out.println("updateResult : " + updateResult);
+		return updateResult;
 	}
 
 	// 상품 삭제
 	@Override
 	public int deleteProduct(String product_no) {
-		// TODO Auto-generated method stub
-		return 0;
+		System.out.println("deleteProduct() - dao");
+
+		// 상품 삭제 결과 [ 성공:1 실패:0 ]
+		int deleteResult = 0;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "DELETE FROM products WHERE product_no=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, product_no);
+	
+			// DB에 상품 삭제 및 결과행 개수 반환
+			deleteResult = pstmt.executeUpdate();
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		System.out.println("deleteResult : " + deleteResult);
+		return deleteResult;
 	}
 
 	// 상품 총 개수

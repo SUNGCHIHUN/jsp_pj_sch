@@ -32,8 +32,8 @@
 			</ul>
 			<ul>
 				<li>게시판</li>
-				<li><a href="#">공지사항</a></li>
-				<li><a href="#">문의사항</a></li>
+				<li><a href="${path}/board_list.do">공지사항</a></li>
+				<li><a href="${path}/board_list.do">문의사항</a></li>
 			</ul>
 			<ul>
 				<li>리뷰관리</li>
@@ -45,7 +45,7 @@
 			</ul>
 			<ul>
 				<li>세션</li>
-				<li><a href="#">로그아웃</a></li>
+				<li><a href="${path}/logout_action.do">로그아웃</a></li>
 			</ul>
 		</div>
 	</div>

@@ -5,10 +5,25 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>치모 - 재고목록</title>
+<title>치모 - 상품목록</title>
 <link rel="stylesheet" href="${path}/resources/css/manager/main.css">
 <link rel="stylesheet" href="${path}/resources/css/manager/board_list.css">
 <link rel="stylesheet" href="${path}/resources/css/manager/page.css">
+
+<script>
+
+	function detailProduct(no) {
+		window.location='${path}/stock_detail.st?product_no=' + no + '&pageNum=${paging.pageNum}';
+	}
+
+	function deleteProduct(no) {
+		if (confirm('삭제하시겠습니까?')) {
+			window.location='${path}/stock_delete_action.st?product_no=' + no + '&pageNum=${paging.pageNum}';
+		}
+	}
+
+</script>
+
 </head>
 <body>
 	<!-- header -->
@@ -25,16 +40,16 @@
 			<div id="section">
 				<table>
 					<tr>
-						<th width="10%">번호</th>
-						<th colspan="2" width="30%">상품정보</th>
+						<th width="5%">번호</th>
+						<th colspan="2" width="35%">상품정보</th>
 						<th width="10%">상품가격</th>
-						<th width="10%">상품수량</th>
+						<th width="10%">재고</th>
 						<th width="10%">카테고리</th>
 						<th width="10%">상태</th>
 						<th width="10%">관리</th>
 					</tr>
-					<c:forEach var="p" items="${plist}" >
-						<tr>
+					<c:forEach var="p" items="${plist}" varStatus="status">
+						<tr id="plist_tr${status.index}">
 							<td>${p.product_no}</td>
 							<td><img src="${p.product_img_name}" alt="상품이미지" width="80px" height="80px"></td>
 							<td>${p.product_name}</td>
@@ -49,10 +64,16 @@
 									<c:otherwise> 없음</c:otherwise>
 								</c:choose>
 							</td>
-							<td>*작업필요*</td>
 							<td>
-								<input type="button" value="수정"> 
-								<input type="button" value="삭제">
+								<c:choose>
+									<c:when test="${p.product_state eq 'sale'}">판매중</c:when>
+									<c:when test="${p.product_state eq 'soldout'}">품절</c:when>
+									<c:otherwise> 없음 </c:otherwise>
+								</c:choose>
+							</td>
+							<td id="btn_td">
+								<input type="button" name="btnUpdate" value="수정" onclick="detailProduct(${p.product_no})";> 
+								<input type="button" name="btnUpdate" value="삭제" onclick="deleteProduct(${p.product_no})">
 							</td>
 						</tr>
 					</c:forEach>

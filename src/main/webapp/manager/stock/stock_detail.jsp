@@ -5,27 +5,14 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>치모 - 상품등록</title>
+<title>치모 - 상품수정</title>
 <link rel="stylesheet" href="${path}/resources/css/manager/main.css">
 <link rel="stylesheet" href="${path}/resources/css/manager/stock_detail.css">
+</head>
 <script>
 
 	$(function() { // 페이지가 로드되면
 	   $("#product_file").on("change", handleImgFileSelect);
-
-		/* 
-			$("#product_file").change(function(e){
-			 
-		    alert($('input[type=file]')[0].files[0].name); //파일이름
-	        alert($("#pdImg")[0].files[0].type); // 파일 타임
-	        alert($("#pdImg")[0].files[0].size); // 파일 크기
-		    // 첨부한 이름 값을 저장
-			$("#product_file").attr("value", $("#product_file")[0].files[0].name);
-		 	
-		    // 이미지 경로도 변경해줌
-		    $("#product_img").prop("src", $("#product_file")[0].files[0].name); 
-		
-		*/
 	});
 	
 	// 파일첨부시 이미지 미리보기
@@ -41,20 +28,19 @@
 		   reader.onload = function(e) {
 	      	$("#product_img").attr("src", e.target.result);
 	  	   }
-	   
+	   		
 	   	   reader.readAsDataURL(f);
 	   });
 	}
 	
 </script>
-</head>
 <body>
 	<!-- header -->
 	<%@ include file="/manager/common/header.jsp" %>
 	<div id="container">
 		<!-- 메뉴이름 -->
 		<div id="title">
-			<h1>상품등록</h1>
+			<h1>상품수정</h1>
 		</div>
 		
 		<div id="contents">
@@ -62,52 +48,55 @@
 		<%@ include file="/manager/common/left_menu.jsp" %>
 			<!-- 오른쪽 컨텐츠 -->
 			<div id="section">
-				<form action="${path}/stock_add_action.st" method="post" enctype="multipart/form-data">
+				<form action="${path}/stock_update_action.st" method="post">
+					<input type="hidden" name="pageNum" value="${paging.pageNum}">
+					<input type="hidden" name="product_no" value="${p_dto.product_no}">
 					<table>
 						<tr>
 							<th>상품명</th>
-							<td colspan="3"><input type="text" class="inputBox" name="p_name" required></td>
+							<td colspan="3"><input type="text" class="inputBox" name="product_name" size="60" value="${p_dto.product_name}" required></td>
 						</tr>
 						<tr>
 							<th>카테고리</th>
 							<td>
-								<select class="category" name="p_category">
-									<option value="">없음</option>
-									<option value="energy">드링크</option>
-									<option value="carbon">탄산</option>
-									<option value="water">생수</option>
-									<option value="coffee">커피</option>
+								<select class="category" name="product_category">
+									<option value="" <c:if test="${p_dto.product_category == ''}"> selected</c:if>>없음</option>
+									<option value="energy" <c:if test="${p_dto.product_category == 'energy'}"> selected</c:if>>드링크</option>
+									<option value="carbon" <c:if test="${p_dto.product_category == 'carbon'}"> selected</c:if>>탄산</option>
+									<option value="water" <c:if test="${p_dto.product_category == 'water'}"> selected</c:if>>생수</option>
+									<option value="coffee" <c:if test="${p_dto.product_category == 'coffee'}"> selected</c:if>>커피</option>
 								</select>
 							</td>
+							<th>상태</th>
 							<td>
 								<select class="state" name="product_state">
-									<option value="">없음</option>
-									<option value="sale">판매중</option>
-									<option value="soldout">품절</option>
+									<option value="" <c:if test="${p_dto.product_state == ''}"> selected</c:if>>없음</option>
+									<option value="sale" <c:if test="${p_dto.product_state == 'sale'}"> selected</c:if>>판매중</option>
+									<option value="soldout" <c:if test="${p_dto.product_state == 'soldout'}"> selected</c:if>>품절</option>
 								</select>								
 							</td>
 						</tr>
 						<tr>
 							<th>상품가격</th>
-							<td><input type="number" class="inputBox" min=0 name="p_price" required></td>
+							<td><input type="number" class="inputBox" name="product_price" min=0 value="${p_dto.product_price}" required></td>
 							<th>상품수량</th>
-							<td><input type="number" class="inputBox" min=0 name="p_amount" required></td>
+							<td><input type="number" class="inputBox" name="product_amount" min=0 value="${p_dto.product_amount}" required></td>
 						</tr>
 						<tr>
 							<th>상품이미지</th>
 							<td style="text-align: center;">
-								<img id="product_img" width="200px" height="200px">
+								<img id="product_img" src="${p_dto.product_img_name}" alt="상품이미지" width="200px" height="200px">
 							</td>
 							<td colspan="2">
 								<%-- 기존 이미지 이름 --%>
 								<input type="hidden" name="hidden_img_name" value="${p_dto.product_img_name}">
 								<br>
-								<input type="file" id="product_file" name="product_file" accept="image/*" required>
+								<input type="file" id="product_file" name="product_file" accept="image/*">
 							</td>
 						</tr>
 						<tr>
 							<td colspan="4">
-								<input type="submit" class="insertBtn" value="등록">
+								<input type="submit" class="updateBtn" value="수정">
 								<input type="button" class="cancelBtn" value="취소" onclick="history.go(-1);">
 							</td>
 						</tr>

@@ -15,6 +15,9 @@ import pj.mvc.jsp.service.StockServiceImpl;
 import pj.mvc.jsp.util.ImageUploaderHandler;
 
 @WebServlet("*.st")
+// 톰캣이 개발디렉토리 내용을 배포 디렉토리로 복사후 실행함, 평소 소스를 수정했는데 반영이 안된경우, 배포디렉토리로 카피가 늦어진 경우임.. 서비스 다시시작하거나, clean 해주는 이유이다.
+// 톰캣배포 디렉토리 ㄱ : 실제로 서비스되는 디렉토리
+// location = "C:\\apache-tomcat-8.5.73\\wtpwebapps\\jsp_pj_sch\\images\\";
 @MultipartConfig(location="C:\\eclipse\\workspace\\jsp_pj_sch\\src\\main\\webapp\\resources\\images\\upload",
 				 fileSizeThreshold=1024*1024,
 				 maxFileSize=1024*1024*10,
@@ -23,6 +26,7 @@ import pj.mvc.jsp.util.ImageUploaderHandler;
 public class StockController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
+//	private static final String IMG_UPLOAD_PATH = "C:\\apache-tomcat-8.5.73\\wtpwebapps\\jsp_pj_sch\\images\\"; 
 	private static final String IMG_UPLOAD_PATH = "C:\\eclipse\\workspace\\jsp_pj_sch\\src\\main\\webapp\\resources\\images\\upload";
 	
 	StockService stockService;
@@ -83,7 +87,39 @@ public class StockController extends HttpServlet {
 			stockService.stockAddAction(req, res);
 			
 			viewPage = "/manager/stock/stock_add_action.jsp";
-		} 
+		
+		// 상품 상세
+		} else if (url.equals("/stock_detail.st")) {
+			System.out.println("[/stock_detail.st 진입]");
+			
+			stockService.stockDetail(req, res);
+			
+			viewPage = "/manager/stock/stock_detail.jsp";
+			
+		// 상품 수정
+		} else if (url.equals("/stock_update_action.st")) {
+			System.out.println("[/stock_update_action.st 진입]");
+			
+			String contentType = req.getContentType();
+			if (contentType != null && contentType.toLowerCase().startsWith("/multipart")) {
+				uploader = new ImageUploaderHandler();
+				uploader.setUploadUrl(IMG_UPLOAD_PATH);
+				uploader.uploadImage(req, res);
+			}
+			
+			stockService.stockUpdateAction(req, res);
+			
+			viewPage = "/manager/stock/stock_update_action.jsp";
+			
+		// 상품 삭제
+		} else if (url.equals("/stock_delete_action.st")) {
+			System.out.println("[/stock_delete_action.st 진입]");
+			
+			stockService.stockDeleteAction(req, res);
+			
+			viewPage = "/manager/stock/stock_delete_action.jsp";
+			
+		}
 		
 		RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 		dispatcher.forward(req, res);

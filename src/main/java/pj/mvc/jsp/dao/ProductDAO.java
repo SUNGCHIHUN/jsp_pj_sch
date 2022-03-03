@@ -22,7 +22,7 @@ public interface ProductDAO {
 	int insertProduct(ProductDTO dto);
 	
 	// 상품 수정
-	int updateProduct(String product_no);
+	int updateProduct(String product_no, ProductDTO dto);
 	
 	// 상품 삭제
 	int deleteProduct(String product_no);
