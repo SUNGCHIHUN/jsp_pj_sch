@@ -45,9 +45,74 @@ public class OrderDAOImpl implements OrderDAO {
 	}
 
 
+	// 전체 주문조회
 	@Override
-	public List<OrderDTO> selectOrder(int start, int end, String customer_id) {
-		System.out.println("selectOrder() - dao");
+	public List<OrderDTO> selectOrderList(int start, int end) {
+		System.out.println("selectOrderList() - dao");
+		
+		// 상품 조회 결과 큰 바구니
+		List<OrderDTO> olist = new ArrayList<>();
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "SELECT *"
+					+ "  FROM ("
+					+ "        SELECT A.*, ROWNUM AS rn"
+					+ "          FROM ("
+					+ "                SELECT order_no, order_day, customer_id, product_no, product_img_name, product_name, order_amount, delivery_message, billing_number, product_price, (product_price * order_amount) total, order_state"
+					+ "                  FROM orders_view"
+					+ "                 ORDER BY order_no DESC"
+					+ "                ) A"
+					+ "        )"
+					+ " WHERE rn BETWEEN ? AND ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, start);
+			pstmt.setInt(2, end);
+			
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				do {
+					OrderDTO dto = new OrderDTO();
+					dto.setOrder_no(rs.getString("order_no"));
+					dto.setOrder_day(rs.getDate("order_day"));
+					dto.setCustomer_id(rs.getString("customer_id"));
+					dto.setProduct_no(rs.getString("product_no"));
+					dto.setProduct_img_name(rs.getString("product_img_name"));
+					dto.setProduct_name(rs.getString("product_name"));
+					dto.setOrder_amount(rs.getInt("order_amount"));
+					dto.setDelivery_message(rs.getString("delivery_message"));
+					dto.setBilling_number(rs.getString("billing_number"));
+					dto.setProduct_price(rs.getInt("product_price"));
+					dto.setTotal_price(rs.getInt("total"));
+					dto.setOrder_state(rs.getString("order_state"));
+					
+					olist.add(dto);
+					
+				} while(rs.next());
+			}
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		System.out.println(olist);
+		
+		return olist;
+	}
+	
+	// 특정고객 주문조회
+	@Override
+	public List<OrderDTO> selectOrderList(int start, int end, String customer_id) {
+		System.out.println("selectOrderList() - dao");
 		
 		// 상품 조회 결과 큰 바구니
 		List<OrderDTO> olist = new ArrayList<>();
@@ -68,6 +133,72 @@ public class OrderDAOImpl implements OrderDAO {
 					+ " WHERE rn BETWEEN ? AND ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, customer_id);
+			pstmt.setInt(2, start);
+			pstmt.setInt(3, end);
+			
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				do {
+					OrderDTO dto = new OrderDTO();
+					dto.setOrder_no(rs.getString("order_no"));
+					dto.setOrder_day(rs.getDate("order_day"));
+					dto.setCustomer_id(rs.getString("customer_id"));
+					dto.setProduct_no(rs.getString("product_no"));
+					dto.setProduct_img_name(rs.getString("product_img_name"));
+					dto.setProduct_name(rs.getString("product_name"));
+					dto.setOrder_amount(rs.getInt("order_amount"));
+					dto.setDelivery_message(rs.getString("delivery_message"));
+					dto.setBilling_number(rs.getString("billing_number"));
+					dto.setProduct_price(rs.getInt("product_price"));
+					dto.setTotal_price(rs.getInt("total"));
+					dto.setOrder_state(rs.getString("order_state"));
+					
+					olist.add(dto);
+					
+				} while(rs.next());
+			}
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		System.out.println(olist);
+		
+		return olist;
+	}
+
+	// 배송 조회
+	@Override
+	public List<OrderDTO> selectOrderDlist(int start, int end, String order_state) {
+		System.out.println("selectOrderList() - dao");
+		
+		// 상품 조회 결과 큰 바구니
+		List<OrderDTO> olist = new ArrayList<>();
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "SELECT *"
+					+ "  FROM ("
+					+ "        SELECT A.*, ROWNUM AS rn"
+					+ "          FROM ("
+					+ "                SELECT order_no, order_day, customer_id, product_no, product_img_name, product_name, order_amount, delivery_message, billing_number, product_price, (product_price * order_amount) total, order_state"
+					+ "                  FROM orders_view"
+					+ "                 WHERE order_state=?"
+					+ "                 ORDER BY order_no DESC"
+					+ "                ) A"
+					+ "        )"
+					+ " WHERE rn BETWEEN ? AND ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, order_state);
 			pstmt.setInt(2, start);
 			pstmt.setInt(3, end);
 			
@@ -157,7 +288,7 @@ public class OrderDAOImpl implements OrderDAO {
 
 	@Override
 	public int updateState(String order_no, String state) {
-		System.out.println("updateStateRefund() - dao");
+		System.out.println("updateState() - dao");
 		
 		int updateResult = 0;
 		
@@ -181,7 +312,6 @@ public class OrderDAOImpl implements OrderDAO {
 				e.printStackTrace();
 			}
 		}
-		
 		
 		return updateResult;
 	}
@@ -236,6 +366,37 @@ public class OrderDAOImpl implements OrderDAO {
 		return dlist;
 	}
 
+	// 전체 주문 개수 조회
+	@Override
+	public int selectOrderTotal() {
+		System.out.println("selectOrderTotal() - dao");
+		
+		int total = 0;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "SELECT COUNT(*) total FROM orders";
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			if (rs.next()) total = rs.getInt("total");
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) rs.close();
+				if (pstmt != null) pstmt.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return total;
+	}
+	
 	@Override
 	public int selectOrderTotal(String customer_id) {
 		System.out.println("selectOrderTotal() - dao");
@@ -266,4 +427,6 @@ public class OrderDAOImpl implements OrderDAO {
 		
 		return total;
 	}
+
+	
 }

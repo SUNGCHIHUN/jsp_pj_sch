@@ -722,7 +722,7 @@ public class CustomerServiceImpl implements CustomerService {
 		int start = paging.getStartRow();
 		int end = paging.getEndRow();
 		
-		List<OrderDTO> olist = dao.selectOrder(start, end, customer_id);
+		List<OrderDTO> olist = dao.selectOrderList(start, end, customer_id);
 		
 		// 3. request 객체에 결과를 저장합니다.
 		req.setAttribute("paging", paging);

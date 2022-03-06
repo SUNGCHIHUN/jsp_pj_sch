@@ -22,9 +22,9 @@
 			</ul>
 			<ul>
 				<li>주문관리</li>
-				<li><a href="#">주문</a></li>
-				<li><a href="#">배송</a></li>
-				<li><a href="#">환불</a></li>
+				<li><a href="order_list.ad">주문</a></li>
+				<li><a href="delivery_list.ad">배송</a></li>
+				<li><a href="order_list.ad">환불</a></li>
 			</ul>
 			<ul>
 				<li>회원관리</li>

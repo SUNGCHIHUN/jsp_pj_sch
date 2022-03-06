@@ -3,13 +3,13 @@ package pj.mvc.jsp.service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public interface ManagerService {
+public interface AdminService {
 
 
 //-------------------------- [ 회원관리 ] --------------------------------	
 
 	// 회원 조회
-	void customerListAction(HttpServletRequest req, HttpServletResponse res);
+	void customerList(HttpServletRequest req, HttpServletResponse res);
 	
 	// 회원 탈퇴처리
 	void customerDeleteAction(HttpServletRequest req, HttpServletResponse res);
@@ -17,7 +17,7 @@ public interface ManagerService {
 //-------------------------- [ 재고관리 ] --------------------------------	
 	
 	// 재고 조회
-	void stockListAction(HttpServletRequest req, HttpServletResponse res);
+	void stockList(HttpServletRequest req, HttpServletResponse res);
 	
 	// 재고 등록
 	void stockAddAction(HttpServletRequest req, HttpServletResponse res);
@@ -31,7 +31,7 @@ public interface ManagerService {
 //-------------------------- [ 주문관리 ] --------------------------------	
 	
 	// 주문 조회
-	void orderListAction(HttpServletRequest req, HttpServletResponse res);
+	void orderList(HttpServletRequest req, HttpServletResponse res);
 	
 	// 주문 승인
 	void orderConfirmAction(HttpServletRequest req, HttpServletResponse res);
@@ -40,13 +40,19 @@ public interface ManagerService {
 	void orderCancelAction(HttpServletRequest req, HttpServletResponse res);
 	
 	// 배송 조회
-	void deliveryListAction(HttpServletRequest req, HttpServletResponse res);
+	void deliveryList(HttpServletRequest req, HttpServletResponse res);
+	
+	// 배송 시작처리
+	void deliveryStartAction(HttpServletRequest req, HttpServletResponse res);
+	
+	// 배송 완료처리
+	void deliveryEndAction(HttpServletRequest req, HttpServletResponse res);
 	
 	// 배송 상세조회
 	void deliveryDetailAction(HttpServletRequest req, HttpServletResponse res);
 
 	// 환불 조회
-	void refundListAction(HttpServletRequest req, HttpServletResponse res);
+	void refundList(HttpServletRequest req, HttpServletResponse res);
 	
 	// 환불 승인
 	void refundConfirmAction(HttpServletRequest req, HttpServletResponse res);
@@ -57,10 +63,10 @@ public interface ManagerService {
 //-------------------------- [ 공지사항 ] --------------------------------	
 	
 	// 공지사항 조회
-	void noticeListAction(HttpServletRequest req, HttpServletResponse res);
+	void noticeList(HttpServletRequest req, HttpServletResponse res);
 	
 	// 공지사항 상세조회
-	void noticeDetailAction(HttpServletRequest req, HttpServletResponse res);
+	void noticeDetail(HttpServletRequest req, HttpServletResponse res);
 	
 	// 공지사항 등록
 	void noticeAddAction(HttpServletRequest req, HttpServletResponse res);
@@ -74,10 +80,10 @@ public interface ManagerService {
 //-------------------------- [ 문의사항 ] --------------------------------	
 
 	// 문의사항 조회
-	void askListAction(HttpServletRequest req, HttpServletResponse res);
+	void askList(HttpServletRequest req, HttpServletResponse res);
 	
 	// 문의사항 상세조회
-	void askDetailAction(HttpServletRequest req, HttpServletResponse res);
+	void askDetail(HttpServletRequest req, HttpServletResponse res);
 	
 	// 문의사항 답변 등록
 	void replyAddAction(HttpServletRequest req, HttpServletResponse res);
@@ -91,5 +97,5 @@ public interface ManagerService {
 //-------------------------- [ 결산 ] --------------------------------	
 
 	// 결산내역 조회
-	void salesListAction(HttpServletRequest req, HttpServletResponse res);
+	void salesList(HttpServletRequest req, HttpServletResponse res);
 }

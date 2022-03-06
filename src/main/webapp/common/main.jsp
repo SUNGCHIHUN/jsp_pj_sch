@@ -13,7 +13,7 @@
 	<div id="container">
 		<div id="section">
 			<div class="banner">
-				<a href="${path}/stock_list.ad"><h3>관리자 페이지</h3></a>
+				<a href="${path}/stock_list.st"><h3>관리자 페이지</h3></a>
 				<a href="${path}/product_list.do"><img src="${path}/resources/images/mainImage/banner2.png" alt="배너 이미지"></a>
 			</div>
 		</div>
