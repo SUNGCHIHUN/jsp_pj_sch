@@ -80,17 +80,58 @@ public class AdminController extends HttpServlet {
 		// 배송 시작
 		} else if (url.equals("/delivery_start_action.ad")) {
 			
+			service.deliveryStartAction(req, res);
+			
 			viewPage = "/manager/delivery/delivery_start_action.jsp";
 		
 		// 배송 완료
-		} else if (url.equals("/delivery_end.ad")) {
+		} else if (url.equals("/delivery_end_action.ad")) {
+			
+			service.deliveryEndAction(req, res);
 			
 			viewPage = "/manager/delivery/delivery_end_action.jsp";
 		
 		// 배송 상세조회
 		} else if (url.equals("/delivery_detail.ad")) {
 			
+			
+			
 			viewPage = "/manager/delivery/delivery_detail.jsp";
+			
+		// 환불 조회
+		} else if (url.equals("/refund_list.ad")) {
+			
+			service.refundList(req, res);
+			
+			viewPage = "/manager/refund/refund_list.jsp";
+			
+		// 환불 승인
+		} else if (url.equals("/refund_confirm_action.ad")) {
+			
+			service.refundConfirmAction(req, res);
+			
+			viewPage = "/manager/refund/refund_confirm_action.jsp";
+		
+		// 환불 거부
+		} else if (url.equals("/refund_reject_action.ad")) {
+			
+			service.refundRejectAction(req, res);
+			
+			viewPage = "/manager/refund/refund_reject_action.jsp";
+		
+		// 회원 조회
+		} else if (url.equals("/customer_list.ad")) {
+			
+			service.customerList(req, res);
+			
+			viewPage = "/manager/member/customer_list.jsp";
+			
+		// 회원 탈퇴처리
+		} else if (url.equals("/customer_delete_action.ad")) {
+			
+			service.customerDeleteAction(req, res);
+			
+			viewPage = "/manager/member/customer_delete_action.jsp";
 			
 		}
 		

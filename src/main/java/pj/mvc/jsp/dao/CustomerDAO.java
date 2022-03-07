@@ -1,5 +1,7 @@
 package pj.mvc.jsp.dao;
 
+import java.util.List;
+
 import pj.mvc.jsp.dto.CustomerDTO;
 import pj.mvc.jsp.dto.ZipcodeDTO;
 
@@ -29,4 +31,9 @@ public interface CustomerDAO {
 	// 주소정보 가져오기
 	ZipcodeDTO selectZipcodeInfo(String zipcode);
 	
+	// 회원정보 전체 조회
+	List<CustomerDTO> selectCustomerList(int start, int end);
+	
+	// 전체 회원 수
+	int selectCustomerTotal();
 }

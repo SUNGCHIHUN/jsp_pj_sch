@@ -12,7 +12,7 @@
 	<c:if test="${updateResult != 0}">
 		<script>
 			alert("배송을 시작하였습니다!");
-			window.location="${path}/delivery_list.ad?pageNum=${pageNum}";
+			window.location="${path}/delivery_list.ad?pageNum=${param.pageNum}";
 		</script>
 	</c:if>
 

@@ -57,8 +57,8 @@ public interface AdminService {
 	// 환불 승인
 	void refundConfirmAction(HttpServletRequest req, HttpServletResponse res);
 	
-	// 환불 취소
-	void refundCancelAction(HttpServletRequest req, HttpServletResponse res);
+	// 환불 거부
+	void refundRejectAction(HttpServletRequest req, HttpServletResponse res);
 	
 //-------------------------- [ 공지사항 ] --------------------------------	
 	

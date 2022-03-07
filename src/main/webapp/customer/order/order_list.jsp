@@ -29,14 +29,14 @@
 	
 	// 환불 요청
 	function refund(order_no) {
-		if(confirm("환불하시겠습니까?")) {
+		if(confirm("환불을 요청하시겠습니까?")) {
 			location.href="${path}/refund_action.do?order_no=" + order_no;
 		}		
 	}
 
 	// 환불 취소
 	function refundCancel(order_no) {
-		if(confirm("환불하시겠습니까?")) {
+		if(confirm("환불을 취소하시겠습니까?")) {
 			location.href="${path}/cancel_refund_action.do?order_no=" + order_no;
 		}		
 	}
@@ -82,7 +82,7 @@
 						<th>상품구매금액</th>
 						<th>합계</th>
 						<th>주문처리상태</th>
-						<th>환불</th>
+						<th>처리</th>
 					</tr>
 					<c:forEach var="order" items="${olist}">
 						<%-- 주문 내역이 없는 경우 --%>
@@ -110,21 +110,23 @@
 									<fmt:formatNumber value="${order.product_price * order.order_amount}" pattern="#,### 원" />
 								</td>
 								<td>
-									${order.order_state}<br>
-									<c:if test="${order.order_state == '배송준비' || order.order_state == '배송중' || order.order_state == '배송완료'}">
-										<input type="button" value="조회" class="selectBtn" onclick="deliveryDetail('${order.billing_number}');">
-									</c:if>
 									<c:if test="${order.order_state == '결제대기'}">
-										<input type="button" value="취소" class="cancelBtn" onclick="orderCancel('${order.order_no}')">
+										<input type="button" value="취소" class="cancelBtn" onclick="orderCancel('${order.order_no}')"><br>
 									</c:if>
-								</td>
-								<td>
+								
 									<c:if test="${order.order_state == '배송완료'}">
-										<input type="button" value="환불" class="refundBtn" onclick="refund('${order.order_no}')">
+										<input type="button" value="환불" class="refundBtn" onclick="refund('${order.order_no}')"><br>
 									</c:if>
 									
 									<c:if test="${order.order_state == '환불요청'}">
-										<input type="button" value="취소" class="cancelBtn" onclick="refundCancel('${order.order_no}')">
+										<input type="button" value="취소" class="cancelBtn" onclick="refundCancel('${order.order_no}')"><br>
+									</c:if>
+									
+									${order.order_state}
+								</td>
+								<td>
+									<c:if test="${order.order_state == '배송시작' || order.order_state == '배송완료'}">
+										<input type="button" value="조회" class="selectBtn" onclick="deliveryDetail('${order.billing_number}');">
 									</c:if>
 								</td>
 							</tr>
@@ -136,7 +138,7 @@
 			<div id="page">
 				<%-- 이전버튼 활성화 여부 --%>
 				<c:if test="${paging.startPage > 10}">
-					<a href="${path}/product_list.do?pageNum=${paging.prev}">[이전]</a>
+					<a href="${path}/order_list.do?pageNum=${paging.prev}">[이전]</a>
 				</c:if>
 				
 				<%-- 페이지 번호 처리 --%>
@@ -147,13 +149,13 @@
 					</c:if>
 					
 					<c:if test="${num != paging.currentPage}">
-						<a href="${path}/product_list.do?pageNum=${num}">${num}</a>
+						<a href="${path}/order_list.do?pageNum=${num}">${num}</a>
 					</c:if>
 				</c:forEach>
 				
 				<%-- 다음버튼 활성화 여부 --%>
 				<c:if test="${paging.endPage < paging.pageCount}">
-					<a href="${path}/product_list.do?pageNum=${paging.next}">[다음]</a>
+					<a href="${path}/order_list.do?pageNum=${paging.next}">[다음]</a>
 				</c:if>
 			</div>
 		</div>

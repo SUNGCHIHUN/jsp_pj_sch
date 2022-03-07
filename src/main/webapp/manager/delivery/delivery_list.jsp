@@ -41,7 +41,7 @@
 	<div id="container">
 		<!-- 메뉴이름 -->
 		<div id="title">
-			<h1>주문관리</h1>
+			<h1>배송관리</h1>
 		</div>
 		
 		<div id="contents">
@@ -69,16 +69,20 @@
 							<td>${o.product_price * o.order_amount}</td>
 							<td>${o.customer_id}</td>
 							<td>
-								<c:if test="${o.order_state eq '결제승인' }">
+								<c:if test="${o.order_state != '결제승인' }">
 									<input type="button" name="btnDetail" value="조회" onclick="deliveryDetail(${o.order_no})"> <br>
 								</c:if>
 								
 								${o.order_state}
 							</td>
 							<td id="btn_td">
-								<c:if test="${o.order_state eq '결제승인' }">
-									<input type="button" name="btnStart" value="시작" onclick="startDelivery(${o.order_no})"> 
-									<input type="button" name="btnEnd" value="완료" onclick="endDelivery(${o.order_no})">
+								<c:if test="${o.order_state != '배송완료' }">
+									<c:if test="${o.order_state != '배송시작'}">
+										<input type="button" name="btnStart" value="시작" onclick="startDelivery(${o.order_no})">
+									</c:if>
+									<c:if test="${o.order_state == '배송시작'}">
+										<input type="button" name="btnEnd" value="완료" onclick="endDelivery(${o.order_no})">
+									</c:if>
 								</c:if>
 							</td>
 						</tr>
@@ -88,7 +92,7 @@
 						<td colspan="8" align="center" style="border-bottom: none;">
 							<%-- 이전버튼 활성화 여부 --%>
 							<c:if test="${paging.startPage > 10}">
-								<a href="${path}/order_list.ad?pageNum=${paging.prev}">[이전]</a>
+								<a href="${path}/delivery_list.ad?pageNum=${paging.prev}">[이전]</a>
 							</c:if>
 							
 							<%-- 페이지 번호 처리 --%>
@@ -99,14 +103,14 @@
 								</c:if>
 								
 								<c:if test="${num != paging.currentPage}">
-									<a href="${path}/order_list.ad?pageNum=${num}">${num}</a>
+									<a href="${path}/delivery_list.ad?pageNum=${num}">${num}</a>
 								</c:if>
 								
 							</c:forEach>
 							
 							<%-- 다음버튼 활성화 여부 --%>
 							<c:if test="${paging.endPage < paging.pageCount}">
-								<a href="${path}/stock_list.ad?pageNum=${paging.next}">[다음]</a>
+								<a href="${path}/delivery_list.ad?pageNum=${paging.next}">[다음]</a>
 							</c:if>
 						</td>
 					</tr>

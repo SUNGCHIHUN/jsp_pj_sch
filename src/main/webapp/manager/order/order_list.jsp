@@ -22,7 +22,6 @@
 			window.location='${path}/order_cancel_action.ad?order_no=' + no + '&pageNum=${paging.pageNum}';
 		}
 	}
-
 	
 </script>
 

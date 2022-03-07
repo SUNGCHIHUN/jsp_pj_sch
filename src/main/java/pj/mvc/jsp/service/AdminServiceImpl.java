@@ -5,8 +5,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import pj.mvc.jsp.dao.CustomerDAO;
+import pj.mvc.jsp.dao.CustomerDAOImpl;
 import pj.mvc.jsp.dao.OrderDAO;
 import pj.mvc.jsp.dao.OrderDAOImpl;
+import pj.mvc.jsp.dto.CustomerDTO;
 import pj.mvc.jsp.dto.OrderDTO;
 import pj.mvc.jsp.util.Paging;
 
@@ -18,12 +21,42 @@ public class AdminServiceImpl implements AdminService {
 	public void customerList(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("selectCustomerList() 서비스 실행");
 		
+		// 화면에서 값을 받는다.
+		String pageNum = req.getParameter("pageNum");
+		
+		// DAO를 생성하여 회원정보를 조회한다.
+		CustomerDAO dao = CustomerDAOImpl.getInstance();
+		
+		Paging paging = new Paging(pageNum);
+		int total = dao.selectCustomerTotal();
+		paging.setTotalCount(total);
+
+		int start = paging.getStartRow();
+		int end = paging.getEndRow();
+		
+		List<CustomerDTO> clist = dao.selectCustomerList(start, end);
+		
+		// request에 결과를 저장한다.
+		req.setAttribute("paging", paging);
+		req.setAttribute("clist", clist);
+		
 	}
 
 	@Override // 회원 삭제
 	public void customerDeleteAction(HttpServletRequest req, HttpServletResponse res) {
-		System.out.println("deleteCustomerAction() 서비스 실행");
+		System.out.println("customerDeleteAction() 서비스 실행");
 		
+		// 화면에서 값을 받는다.
+		String pageNum = req.getParameter("pageNum");
+		String customer_id = req.getParameter("customer_id");
+		
+		// DAO를 생성하여 회원 삭제처리한다.
+		CustomerDAO dao = CustomerDAOImpl.getInstance();
+		int updateResult = dao.deleteCustomer(customer_id);
+		
+		// request에 결과를 저장한다.
+		req.setAttribute("pageNum", pageNum);
+		req.setAttribute("updateResult", updateResult);
 	}
 	
 // ----------------------------------------- [ 재고관리 ] ---------------------------------------------------	
@@ -128,7 +161,7 @@ public class AdminServiceImpl implements AdminService {
 		// DAO 생성하여 주문목록 조회
 		OrderDAO dao = OrderDAOImpl.getInstance();
 		
-		int total = dao.selectOrderTotal();
+		int total = dao.selectDeliveryTotal();
 		
 		Paging paging = new Paging(pageNum);
 		paging.setTotalCount(total);
@@ -192,18 +225,62 @@ public class AdminServiceImpl implements AdminService {
 	@Override // 환불 조회
 	public void refundList(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("refundList() 서비스 실행");
+		
+		// 화면으로부터 데이터를 입력받는다.
+		String pageNum = req.getParameter("pageNum");
+
+		// DAO 생성하여 주문목록 조회
+		OrderDAO dao = OrderDAOImpl.getInstance();
+		
+		int total = dao.selectRefundTotal();
+		
+		Paging paging = new Paging(pageNum);
+		paging.setTotalCount(total);
+		
+		int start = paging.getStartRow();
+		int end = paging.getEndRow();
+		
+		List<OrderDTO> olist = dao.selectOrderRlist(start, end, "환불요청");
+		
+		// request에 결과 저장
+		req.setAttribute("olist", olist);
+		req.setAttribute("paging", paging);
 	}
 	
 	@Override // 환불승인
 	public void refundConfirmAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("confirmRefundAction() 서비스 실행");
 		
+		// 화면으로부터 값을 받아온다.
+		String pageNum = req.getParameter("pageNum");
+		String order_no = req.getParameter("order_no");
+
+		// DAO를 생성하여 주문상태를 변경한다.
+		OrderDAO dao = OrderDAOImpl.getInstance();
+		int updateResult = dao.updateState(order_no, "환불완료");
+		
+		// request에 결과를 저장
+		req.setAttribute("pageNum", pageNum);
+		req.setAttribute("updateResult", updateResult);
+		
 	}
 
-	@Override // 환불취소
-	public void refundCancelAction(HttpServletRequest req, HttpServletResponse res) {
+	@Override // 환불거부
+	public void refundRejectAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("cancelRefundAction() 서비스 실행");
 		
+		// 화면으로부터 값을 받아온다.
+		String pageNum = req.getParameter("pageNum");
+		String order_no = req.getParameter("order_no");
+
+		// DAO를 생성하여 주문상태를 변경한다.
+		OrderDAO dao = OrderDAOImpl.getInstance();
+		int updateResult = dao.updateState(order_no, "환불거부");
+		
+		// request에 결과를 저장
+		req.setAttribute("pageNum", pageNum);
+		req.setAttribute("updateResult", updateResult);
+
 	}
 	
 // ----------------------------------------- [ 공지사항 ] ---------------------------------------------------	

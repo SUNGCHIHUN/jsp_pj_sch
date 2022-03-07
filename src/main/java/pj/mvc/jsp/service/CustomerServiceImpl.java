@@ -814,6 +814,5 @@ public class CustomerServiceImpl implements CustomerService {
 		req.setAttribute("p_dto", p_dto);
 		req.setAttribute("amount", amount);
 		
-		
 	}
 }

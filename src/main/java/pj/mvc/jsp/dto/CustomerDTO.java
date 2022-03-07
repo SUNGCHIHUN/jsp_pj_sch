@@ -11,6 +11,8 @@ public class CustomerDTO {
 	private String zipcode; // 우편번호
 	private String customer_address; // 고객 상세주소
 	private Date customer_regist_day; // 고객 가입일
+	private Date customer_delete_day; // 고객 탈퇴일
+	private String customer_state; // 가입상태
 
 	public CustomerDTO() {}
 
@@ -63,11 +65,28 @@ public class CustomerDTO {
 		this.customer_regist_day = customer_regist_day;
 	}
 
+	public Date getCustomer_delete_day() {
+		return customer_delete_day;
+	}
+
+	public void setCustomer_delete_day(Date customer_delete_day) {
+		this.customer_delete_day = customer_delete_day;
+	}
+
+	public String getCustomer_state() {
+		return customer_state;
+	}
+
+	public void setCustomer_state(String customer_state) {
+		this.customer_state = customer_state;
+	}
+
 	@Override
 	public String toString() {
-		return "CustomerDTO [customer_id=" + customer_id + ", customer_password="
-				+ customer_password + ", customer_name=" + customer_name + ", customer_email=" + customer_email
-				+ ", customer_tel=" + customer_tel + ", zipcode=" + zipcode + ", customer_address=" + customer_address
-				+ ", customer_regist_day=" + customer_regist_day + "]";
+		return "CustomerDTO [customer_id=" + customer_id + ", customer_password=" + customer_password
+				+ ", customer_name=" + customer_name + ", customer_email=" + customer_email + ", customer_tel="
+				+ customer_tel + ", zipcode=" + zipcode + ", customer_address=" + customer_address
+				+ ", customer_regist_day=" + customer_regist_day + ", customer_delete_day=" + customer_delete_day
+				+ ", customer_state=" + customer_state + "]\n";
 	}
 }

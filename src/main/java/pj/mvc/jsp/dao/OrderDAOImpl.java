@@ -44,7 +44,6 @@ public class OrderDAOImpl implements OrderDAO {
 		return instance;
 	}
 
-
 	// 전체 주문조회
 	@Override
 	public List<OrderDTO> selectOrderList(int start, int end) {
@@ -193,6 +192,7 @@ public class OrderDAOImpl implements OrderDAO {
 					+ "                SELECT order_no, order_day, customer_id, product_no, product_img_name, product_name, order_amount, delivery_message, billing_number, product_price, (product_price * order_amount) total, order_state"
 					+ "                  FROM orders_view"
 					+ "                 WHERE order_state=?"
+					+ "					   OR order_state LIKE '배송' || '%'"
 					+ "                 ORDER BY order_no DESC"
 					+ "                ) A"
 					+ "        )"
@@ -239,6 +239,73 @@ public class OrderDAOImpl implements OrderDAO {
 		System.out.println(olist);
 		
 		return olist;
+	}
+	
+	@Override
+	public List<OrderDTO> selectOrderRlist(int start, int end, String order_state) {
+		System.out.println("selectOrderRlist");
+		
+		// 상품 조회 결과 큰 바구니
+		List<OrderDTO> olist = new ArrayList<>();
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "SELECT *"
+					+ "  FROM ("
+					+ "        SELECT A.*, ROWNUM AS rn"
+					+ "          FROM ("
+					+ "                SELECT order_no, order_day, customer_id, product_no, product_img_name, product_name, order_amount, delivery_message, billing_number, product_price, (product_price * order_amount) total, order_state"
+					+ "                  FROM orders_view"
+					+ "                 WHERE order_state=?"
+					+ "					   OR order_state LIKE '환불' || '%'"
+					+ "                 ORDER BY order_no DESC"
+					+ "                ) A"
+					+ "        )"
+					+ " WHERE rn BETWEEN ? AND ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, order_state);
+			pstmt.setInt(2, start);
+			pstmt.setInt(3, end);
+			
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				do {
+					OrderDTO dto = new OrderDTO();
+					dto.setOrder_no(rs.getString("order_no"));
+					dto.setOrder_day(rs.getDate("order_day"));
+					dto.setCustomer_id(rs.getString("customer_id"));
+					dto.setProduct_no(rs.getString("product_no"));
+					dto.setProduct_img_name(rs.getString("product_img_name"));
+					dto.setProduct_name(rs.getString("product_name"));
+					dto.setOrder_amount(rs.getInt("order_amount"));
+					dto.setDelivery_message(rs.getString("delivery_message"));
+					dto.setBilling_number(rs.getString("billing_number"));
+					dto.setProduct_price(rs.getInt("product_price"));
+					dto.setTotal_price(rs.getInt("total"));
+					dto.setOrder_state(rs.getString("order_state"));
+					
+					olist.add(dto);
+					
+				} while(rs.next());
+			}
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		System.out.println(olist);
+		
+		return olist;
+		
 	}
 	
 	@Override
@@ -366,11 +433,10 @@ public class OrderDAOImpl implements OrderDAO {
 		return dlist;
 	}
 
-	// 전체 주문 개수 조회
 	@Override
-	public int selectOrderTotal() {
-		System.out.println("selectOrderTotal() - dao");
-		
+	public int selectOrderAllTotal() {
+		System.out.println("selectOrderAllTotal() - dao");
+
 		int total = 0;
 		
 		try {
@@ -397,6 +463,38 @@ public class OrderDAOImpl implements OrderDAO {
 		return total;
 	}
 	
+	// 전체 주문 개수 조회
+	@Override
+	public int selectOrderTotal() {
+		System.out.println("selectOrderTotal() - dao");
+		
+		int total = 0;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "SELECT COUNT(*) total FROM orders WHERE order_state LIKE '결제' || '%'";
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			if (rs.next()) total = rs.getInt("total");
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) rs.close();
+				if (pstmt != null) pstmt.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return total;
+	}
+	
+	// 특정 고객 주문 개수 조회
 	@Override
 	public int selectOrderTotal(String customer_id) {
 		System.out.println("selectOrderTotal() - dao");
@@ -428,5 +526,63 @@ public class OrderDAOImpl implements OrderDAO {
 		return total;
 	}
 
-	
+	@Override
+	public int selectDeliveryTotal() {
+		System.out.println("selectDeliveryTotal() - dao");
+		
+		int total = 0;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "SELECT COUNT(*) total FROM orders WHERE order_state='결제승인' OR order_state LIKE '배송' || '%'";
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			if (rs.next()) total = rs.getInt("total");
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) rs.close();
+				if (pstmt != null) pstmt.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return total;
+	}
+
+	@Override
+	public int selectRefundTotal() {
+		System.out.println("selectRefundTotal() - dao");
+		
+		int total = 0;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "SELECT COUNT(*) total FROM orders WHERE order_state LIKE '환불' || '%'";
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			if (rs.next()) total = rs.getInt("total");
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) rs.close();
+				if (pstmt != null) pstmt.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return total;
+	}
 }

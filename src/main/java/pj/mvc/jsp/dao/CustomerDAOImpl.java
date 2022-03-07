@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -240,18 +242,21 @@ public class CustomerDAOImpl implements CustomerDAO {
 
 	@Override // 회원정보 DB 삭제
 	public int deleteCustomer(String strId) {
+		
 		// 회원정보 삭제 결과 [ 성공:1 실패:0 ]
-		int deleteResult = 0;
+		int updateResult = 0;
 		
 		try {
 			conn = dataSource.getConnection();
 			
-			String sql = "DELETE FROM Customers WHERE customer_id=?";
+			String sql = "UPDATE Customers SET customer_delete_day=sysdate, customer_state='unregister' WHERE customer_id=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, strId);
 			
 			// DB에 회원정보 등록 및 결과행 개수 반환
-			deleteResult = pstmt.executeUpdate();
+			updateResult = pstmt.executeUpdate();
+			
+			System.out.println("updateResult : " + updateResult);
 			
 		} catch(SQLException e) {
 			e.printStackTrace();
@@ -263,7 +268,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 				e.printStackTrace();
 			}
 		}		
-		return deleteResult;
+		return updateResult;
 	}
 
 	@Override
@@ -342,6 +347,97 @@ public class CustomerDAOImpl implements CustomerDAO {
 			}
 		}		
 		return dto;
+	}
+
+	@Override
+	public List<CustomerDTO> selectCustomerList(int start, int end) {
+		System.out.println("selectCustomerList() - dao");
+		
+		// 회원정보 리스트를 담을 큰 바구니
+		List<CustomerDTO> clist = new ArrayList<>();
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "SELECT *"
+					+ "  FROM ("
+					+ "        SELECT A.*, ROWNUM AS rn"
+					+ "          FROM ("
+					+ "                SELECT customer_id, customer_name, zipcode, customer_address, customer_tel, customer_email, customer_regist_day, customer_delete_day, customer_state"
+					+ "                  FROM customers"
+					+ "                 ORDER BY customer_regist_day DESC"
+					+ "                ) A"
+					+ "        )"
+					+ " WHERE rn BETWEEN ? AND ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, start);
+			pstmt.setInt(2, end);
+			
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				do {
+					CustomerDTO dto = new CustomerDTO();
+					dto.setCustomer_id(rs.getString("customer_id"));
+					dto.setCustomer_name(rs.getString("customer_name"));
+					dto.setZipcode(rs.getString("zipcode"));
+					dto.setCustomer_address(rs.getString("customer_address"));
+					dto.setCustomer_tel(rs.getString("customer_tel"));
+					dto.setCustomer_email(rs.getString("customer_email"));
+					dto.setCustomer_regist_day(rs.getDate("customer_regist_day"));
+					dto.setCustomer_delete_day(rs.getDate("customer_delete_day"));
+					dto.setCustomer_state(rs.getString("customer_state"));
+					
+					clist.add(dto);
+					
+				} while(rs.next());
+			}
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		System.out.println(clist);
+		
+		return clist;
+	}
+
+	@Override
+	public int selectCustomerTotal() {
+		System.out.println("selectCustomerTotal() - dao");
+		
+		int total = 0;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "SELECT COUNT(*) total FROM customers";
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+
+			
+			if (rs.next()) total = rs.getInt("total");
+
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return total;
 	}
 
 }
