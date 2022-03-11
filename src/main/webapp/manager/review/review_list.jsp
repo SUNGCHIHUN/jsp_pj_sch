@@ -5,10 +5,17 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>관리자 - 결산</title>
+<title>관리자 - 리뷰목록</title>
 <link rel="stylesheet" href="${path}/resources/css/manager/main.css">
 <link rel="stylesheet" href="${path}/resources/css/manager/board_list.css">
 <link rel="stylesheet" href="${path}/resources/css/manager/page.css">
+<script>
+	function deleteReview(no) {
+		if (confirm('리뷰를 삭제하시겠습니까?')) {
+			window.location='${path}/review_delete_action.ad?review_no=' + no;
+		}
+	}
+</script>
 </head>
 <body>
 	<!-- header -->
@@ -16,7 +23,7 @@
 	<div id="container">
 		<!-- 메뉴이름 -->
 		<div id="title">
-			<h1>결산</h1>
+			<h1>리뷰목록</h1>
 		</div>
 		
 		<div id="contents">
@@ -26,12 +33,28 @@
 				<table>
 					<tr>
 						<th width="5%">번호</th>
-						<th width="10%">날짜</th>
-						<th width="10%">상품가격총합계</th>
-						<th width="10%">배송비 합계</th>
+						<th width="10%">작성자</th>
+						<th width="10%">내용</th>
+						<th width="10%">별점</th>
+						<th width="10%">작성일</th>
+						<th width="10%">관리</th>
 					</tr>
-					<c:forEach var="s" items="${slist}" varStatus="status">
+					<c:forEach var="r" items="${rlist}" varStatus="status">
 						<tr>
+							<td>${r.review_no}</td>
+							<td>${r.review_writer}</td>
+							<td>${r.review_content}</td>
+							<td>
+								<c:choose>
+									<c:when test="${review_star == 5}">★★★★★</c:when>
+									<c:when test="${review_star == 4}">★★★★☆</c:when>
+									<c:when test="${review_star == 3}">★★★☆☆</c:when>
+									<c:when test="${review_star == 2}">★★☆☆☆</c:when>
+									<c:when test="${review_star == 1}">★☆☆☆☆</c:when>
+									<c:otherwise> 없음 </c:otherwise>
+								</c:choose>
+							</td>
+							<td>${r.review_regist_day}</td>
 							<td id="btn_td">
 								<input type="button" name="btnDelete" value="삭제" onclick="deleteReview(${r.review_no})">
 							</td>

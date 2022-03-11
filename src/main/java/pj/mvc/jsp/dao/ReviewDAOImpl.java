@@ -41,6 +41,64 @@ public class ReviewDAOImpl implements ReviewDAO {
 	}
 	
 	@Override
+	public List<ReviewDTO> selectAllReview(int start, int end) {
+		System.out.println("selectAllReview() - dao");
+
+		// 상품리뷰들을 담을 큰바구니 생성
+		List<ReviewDTO> rlist = new ArrayList<>();
+
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "SELECT *"
+					+ "  		FROM ("
+					+ "        		SELECT A.*, ROWNUM AS rn"
+					+ "          		  FROM (SELECT *"
+					+ "                		    FROM review"
+					+ "                		  ORDER BY review_no DESC"
+					+ "                		  ) A"
+					+ "     		    )"
+					+ " WHERE rn BETWEEN ? AND ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, start);
+			pstmt.setInt(2, end);
+			
+			rs = pstmt.executeQuery();
+			
+			// 조회가 안될 때까지 반복
+			while (rs.next()) {
+				// 조회된 상품정보를 작은 바구니 dto에 담는다.
+				ReviewDTO dto = new ReviewDTO();
+				dto.setReview_no(rs.getString("review_no"));
+				dto.setCustomer_id(rs.getString("customer_id"));
+				dto.setReview_writer(rs.getString("review_writer"));
+				dto.setReview_contents(rs.getString("review_contents"));
+				dto.setReview_regist_day(rs.getDate("review_regist_day"));
+				dto.setProduct_no(rs.getString("product_no"));
+				dto.setReview_star(rs.getInt("review_star"));
+				
+				rlist.add(dto);
+			}
+			
+			System.out.println(rlist);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			// 사용자원 해제
+			try {
+				if (rs != null) rs.close();
+				if (pstmt != null) pstmt.close();
+				if (conn != null) conn.close();
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return rlist;
+	}
+	
+	@Override
 	public List<ReviewDTO> selectReview(int start, int end, String strNo) {
 		System.out.println("selectReview() - dao");
 

@@ -45,14 +45,6 @@ public class StockServiceImpl implements StockService {
 		// DAO를 생성 
 		ProductDAO dao = ProductDAOImpl.getInstance();
 
-		// 페이징 처리
-		Paging paging = new Paging(pageNum);
-		int total = dao.selectProductTotal();
-		paging.setTotalCount(total);
-		
-		int start = paging.getStartRow();
-		int end = paging.getEndRow();
-
 		// 조회 결과 저장
 		ProductDTO dto = dao.selectProductDetail(product_no);
 		
@@ -101,6 +93,7 @@ public class StockServiceImpl implements StockService {
 		int updateResult = dao.updateProduct(product_no, dto);
 		
 		// request 객체에 저장
+		req.setAttribute("pageNum", pageNum);
 		req.setAttribute("updateResult", updateResult);
 		
 	}
@@ -119,8 +112,8 @@ public class StockServiceImpl implements StockService {
 		int deleteResult = dao.deleteProduct(product_no);
 		
 		// request 객체에 저장
+		req.setAttribute("pageNum", pageNum);
 		req.setAttribute("deleteResult", deleteResult);
-		
 	}
 
 	// 상품 조회
